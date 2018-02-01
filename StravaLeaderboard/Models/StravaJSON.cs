@@ -5,13 +5,7 @@ using System.Runtime.Serialization;
 
 namespace StravaLeaderboard.models
 {
-    public class Club
-    {
-        public int ClubID { get; set; }
-        public string Name { get; set; }
-        public string Location { get; set; }
-        public string Country { get; set; }
-    }
+
 
     public class Activity
     {
@@ -26,7 +20,7 @@ namespace StravaLeaderboard.models
 
         //reference members
         public Athlete Athlete { get; set; }
-        public int EventID { get; set; }
+        //public int EventID { get; set; }
     }
 
     public class Athlete
@@ -76,18 +70,6 @@ namespace StravaLeaderboard.models
             set
             { totalPoints = value; }
         }
-    }
-
-    public class SegmentLeaderboard
-    {
-        public int SegmentLeaderboardID { get; set; }
-        public string SegmentType { get; set; }
-        public int Rank { get; set; } = 0;
-        public int Elapsed_time { get; set; }
-        public DateTime Start_date { get; set; }
-
-        //calculated
-        public int Points { get; set; }
     }
 
     public class SegmentEntries
