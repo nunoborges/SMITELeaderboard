@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StravaLeaderboard.Data;
+using StravaLeaderboard.models;
 
 namespace StravaLeaderboard
 {
@@ -25,6 +26,8 @@ namespace StravaLeaderboard
         {
             services.AddDbContext<DataContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.Configure<APITokens>(Configuration.GetSection("APITokens"));
 
             services.AddMvc();
         }
