@@ -25,12 +25,11 @@ namespace StravaLeaderboard.Pages
 
         public void OnGet()
         {
-            Message = "Your Strava Access_Token = " +
-                _apitokens.Access_Token;
-            List<Activity> Activities = FetchStravaData();
+                //_apitokens.Access_Token;
+            Message = FetchStravaData();
         }
 
-        public List<Activity> FetchStravaData()
+        public string FetchStravaData()
         {
             //get club activities - limited to top 200
             List<Activity> Activities = GetActivities();
@@ -51,12 +50,12 @@ namespace StravaLeaderboard.Pages
 
             //write leaderboard to console in ranked order
             //TODO: Strava is not returning the json efforts in order of elapsed_time - launched a ticket
-            Activities = WriteLeaderboard(Activities);
+            string results = WriteLeaderboard(Activities);
 
-            return Activities;
+            return results;
         }
 
-        private List<Activity> WriteLeaderboard(List<Activity> activities)
+        private string WriteLeaderboard(List<Activity> activities)
         {
             //try ordering activities with order by
             List<Activity> sortedActivities = (from activity in activities
@@ -64,16 +63,16 @@ namespace StravaLeaderboard.Pages
                                                orderby activity.Athlete.SegmentLeaderboard[0].Rank
                                                select activity).ToList();
 
+            string results = "";
             foreach (Activity activity in sortedActivities)
             {
-                Console.WriteLine(activity.Athlete.FirstName + " " + activity.Athlete.LastName);
-                Console.WriteLine("Rank: " + activity.Athlete.SegmentLeaderboard[0].Rank);
-                Console.WriteLine("Points: " + activity.Athlete.SegmentLeaderboard[0].Points);
-                Console.WriteLine("Elapsed Time: " + activity.Athlete.SegmentLeaderboard[0].Elapsed_time);
+                results = results + activity.Athlete.FirstName + " " + activity.Athlete.LastName +
+                " | Rank: " + activity.Athlete.SegmentLeaderboard[0].Rank +
+                " | Points: " + activity.Athlete.SegmentLeaderboard[0].Points +
+                " | Elapsed Time: " + activity.Athlete.SegmentLeaderboard[0].Elapsed_time + "<BR>";
                 //Console.WriteLine("Start Time: " + activity.AthleteID.SegmentLeaderboard[0].Start_date);
-                Console.WriteLine();
             }
-            return sortedActivities;
+            return results;
         }
 
         public List<Activity> GetActivities()
@@ -107,7 +106,7 @@ namespace StravaLeaderboard.Pages
         public List<Activity> ParseActivities(List<Activity> activities)
         {
             List<Activity> ParsedActivities = (from activity in activities
-                                               where activity.Name.ToLower().Contains("watopia")
+                                               where activity.Name.ToLower().Contains("smite")
                                                select activity).ToList();
 
             return ParsedActivities;
