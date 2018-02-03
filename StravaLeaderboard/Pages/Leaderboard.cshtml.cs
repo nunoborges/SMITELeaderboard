@@ -68,7 +68,7 @@ namespace StravaLeaderboard.Pages
                                                orderby activity.Athlete.SegmentLeaderboard[0].Rank
                                                select activity).ToList();
 
-            string results = "<BR><BR>" + "Segment # " + segment.ToString() + " | Athlete Results #: " + sortedActivities.Count.ToString() + "<BR>";
+            string results = "<BR><BR>" + "Segment # " + segment.ToString() + " | Athlete Results #: " + sortedActivities.Count.ToString() + "<BR><BR>";
             foreach (Activity activity in sortedActivities)
             {
                 results = results + activity.Athlete.FirstName + " " + activity.Athlete.LastName +
