@@ -25,11 +25,16 @@ namespace StravaLeaderboard.Pages
 
         public void OnGet()
         {
-                //_apitokens.Access_Token;
-            Message = FetchStravaData();
+            //_apitokens.Access_Token;
+            int[] segments = new int[] {16730849,16730862,16730897,16730888,16730909};
+            for (int x = 0; x < 5; x++)
+            {
+                Message += FetchStravaData(segments[x]);
+            }
+            
         }
 
-        public string FetchStravaData()
+        public string FetchStravaData(int segment)
         {
             //get club activities - limited to top 200
             List<Activity> Activities = GetActivities();
@@ -42,7 +47,7 @@ namespace StravaLeaderboard.Pages
 
             //get Segment Leaderboard for list of segments
             //TODO: go to contentful to get the segment list and iterate through each
-            SegmentEntries SegmentEntries = GetSegmentEntries(13619390);
+            SegmentEntries SegmentEntries = GetSegmentEntries(segment);
 
             //parse out the segment efforts where a user name match 
             //exists between the effort and the activity above
@@ -50,12 +55,12 @@ namespace StravaLeaderboard.Pages
 
             //write leaderboard to console in ranked order
             //TODO: Strava is not returning the json efforts in order of elapsed_time - launched a ticket
-            string results = WriteLeaderboard(Activities);
+            string results = WriteLeaderboard(Activities, segment);
 
             return results;
         }
 
-        private string WriteLeaderboard(List<Activity> activities)
+        private string WriteLeaderboard(List<Activity> activities, int segment)
         {
             //try ordering activities with order by
             List<Activity> sortedActivities = (from activity in activities
@@ -63,7 +68,7 @@ namespace StravaLeaderboard.Pages
                                                orderby activity.Athlete.SegmentLeaderboard[0].Rank
                                                select activity).ToList();
 
-            string results = "";
+            string results = "<BR><BR>" + "Segment # " + segment.ToString() + " | Athlete Results #: " + sortedActivities.Count.ToString() + "<BR>";
             foreach (Activity activity in sortedActivities)
             {
                 results = results + activity.Athlete.FirstName + " " + activity.Athlete.LastName +
@@ -119,8 +124,8 @@ namespace StravaLeaderboard.Pages
 
         private SegmentEntries GetSegmentEntries(int Segment)
         {
-            Uri uri = new Uri("https://www.strava.com/api/v3/segments/" + Segment + "/leaderboard?access_token=" +
-                _apitokens.Access_Token +"&per_page=200&context_entries=0&club_id=238810&date_range=this_week");
+            Uri uri = new Uri("https://www.strava.com/api/v3/segments/" + Segment.ToString() + "/leaderboard?access_token=" +
+                _apitokens.Access_Token +"&per_page=200&context_entries=0&club_id=238810&date_range=today");
             HttpWebRequest httpRequest = (HttpWebRequest)System.Net.WebRequest.Create(uri);
             httpRequest.Method = "GET";
 
