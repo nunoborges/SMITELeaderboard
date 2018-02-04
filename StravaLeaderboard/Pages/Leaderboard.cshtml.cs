@@ -26,8 +26,8 @@ namespace StravaLeaderboard.Pages
         public void OnGet()
         {
             //_apitokens.Access_Token;
-            int[] segments = new int[] {16730849,16730862,16730897,16730888,16730909};
-            for (int x = 0; x < 5; x++)
+            int[] segments = new int[] {16730849,16730862,16730897,16730888,16936841,16730909};
+            for (int x = 0; x < segments.Length; x++)
             {
                 Message += FetchStravaData(segments[x]);
             }
