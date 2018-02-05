@@ -13,20 +13,22 @@ namespace StravaLeaderboard.Pages
 {
     public class LeaderboardModel : PageModel
     {
-        //https://codingblast.com/asp-net-core-configuration-reloading-binding-injecting/
-        //https://docs.microsoft.com/en-us/aspnet/core/data/ef-rp/sort-filter-page
+
+        public APITokens _apitokens { get; set; }
         public LeaderboardModel(IOptions<APITokens> apitokens)
         {
             _apitokens = apitokens.Value;
         }  
-        
+        public List<Activity> pageactivities { get; set; }
         public string Message { get; set; }
-        public APITokens _apitokens { get; set; }
+        
 
         public void OnGet()
         {
             //_apitokens.Access_Token;
-            int[] segments = new int[] {16730849,16730862,16730897,16730888,16936841,16730909};
+            // London = 14063868 (tim's tongue twister)
+            // Watopia = 16730849,16730862,16730897,16730888,16936841,16730909
+            int[] segments = new int[] {14063868};
             for (int x = 0; x < segments.Length; x++)
             {
                 Message += FetchStravaData(segments[x]);
@@ -52,6 +54,7 @@ namespace StravaLeaderboard.Pages
             //parse out the segment efforts where a user name match 
             //exists between the effort and the activity above
             Activities = ParseEntries(SegmentEntries, Activities);
+            pageactivities = Activities;
 
             //write leaderboard to console in ranked order
             //TODO: Strava is not returning the json efforts in order of elapsed_time - launched a ticket
@@ -111,7 +114,7 @@ namespace StravaLeaderboard.Pages
         public List<Activity> ParseActivities(List<Activity> activities)
         {
             List<Activity> ParsedActivities = (from activity in activities
-                                               where activity.Name.ToLower().Contains("smite")
+                                               where activity.Name.ToLower().Contains("london")
                                                select activity).ToList();
 
             return ParsedActivities;
