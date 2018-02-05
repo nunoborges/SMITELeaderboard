@@ -35,6 +35,7 @@
                     <li><a asp-page="/Index">Home</a></li>
                     <li><a asp-page="/Leaderboard">Leaderboard</a></li>
                     <li><a asp-page="/Admin">Admin</a></li>
+                    <li><a asp-page="/Club">Club</a></li>
                 </ul>
             </div>
         </div>
@@ -47,11 +48,36 @@
         </footer>
     </div>
 
-    <environment include="Development">
+    <environment include="Development, Production">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
         @*Below scripts are all for JQWidgets*@
+        <link href="~/jqwidgets/styles/jqx.base.css" rel="stylesheet" />
+        <link href="~/jqwidgets/styles/jqx.arctic.css" rel="stylesheet" />
+        <link href="~/jqwidgets/styles/jqx.black.css" rel="stylesheet" />
+        <link href="~/jqwidgets/styles/jqx.metro.css" rel="stylesheet" />
+        <link href="~/jqwidgets/styles/jqx.light.css" rel="stylesheet" />
+        <link href="~/jqwidgets/styles/jqx.fresh.css" rel="stylesheet" />
+        <link href="~/jqwidgets/styles/jqx.energyblue.css" rel="stylesheet" />
+        <link href="~/jqwidgets/styles/jqx.highcontrast.css" rel="stylesheet" />
+        <link href="~/jqwidgets/styles/jqx.dark.css" rel="stylesheet" />
+        <link href="~/jqwidgets/styles/jqx.bootstrap.css" rel="stylesheet" />
+        <link href="~/jqwidgets/styles/jqx.shinyblack.css" rel="stylesheet" />
+        <link href="~/jqwidgets/styles/jqx.office.css" rel="stylesheet" />
+        <link href="~/jqwidgets/styles/jqx.metrodark.css" rel="stylesheet" />
+        <link href="~/jqwidgets/styles/jqx.darkblue.css" rel="stylesheet" />
+        <link href="~/jqwidgets/styles/jqx.classic.css" rel="stylesheet" />
+        <link href="~/jqwidgets/styles/jqx.web.css" rel="stylesheet" />
+        <link href="~/jqwidgets/styles/jqx.ui-lightness.css" rel="stylesheet" />
+        <link href="~/jqwidgets/styles/jqx.ui-darkness.css" rel="stylesheet" />
+        <link href="~/jqwidgets/styles/jqx.ui-overcast.css" rel="stylesheet" />
+        <link href="~/jqwidgets/styles/jqx.ui-le-frog.css" rel="stylesheet" />
+        <link href="~/jqwidgets/styles/jqx.ui-redmond.css" rel="stylesheet" />
+        <link href="~/jqwidgets/styles/jqx.ui-redmond.css" rel="stylesheet" />
+        <link href="~/jqwidgets/styles/jqx.ui-smoothness.css" rel="stylesheet" />
+        <link href="~/jqwidgets/styles/jqx.ui-sunny.css" rel="stylesheet" />
+        <link href="~/jqwidgets/styles/jqx.ui-start.css" rel="stylesheet" />
         <script src="~/jqwidgets/jqxbuttons.js"></script>
         <script src="~/jqwidgets/jqxscrollbar.js"></script>
         <script src="~/jqwidgets/jqxgrid.js"></script>
@@ -68,6 +94,19 @@
         <script src="~/jqwidgets/jqxmenu.js"></script>
         <script src="~/jqwidgets/jqxlistbox.js"></script>
         <script src="~/jqwidgets/jqxdropdownlist.js"></script>
+        <script src="~/jqwidgets/jqxcore.js"></script>
+        <script src="http://modernizr.com/downloads/modernizr-latest.js"></script>
+
+        <script src="~/jqwidgets/jqx-all.js"></script>
+
+        <script src="~/jqwidgets/globalization/globalize.js"></script>
+        <style>
+            .container {
+                margin: 0px;
+                margin-top: 30px;
+            }
+        </style>
+
     </environment>
     <environment exclude="Development">
         <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"

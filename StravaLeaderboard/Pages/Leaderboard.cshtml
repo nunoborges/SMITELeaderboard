@@ -8,14 +8,35 @@
 @{
     var activity = Model.pageactivities.FirstOrDefault();
 }
-<jqx-grid id="grid" altrows="true" alt-rows="true" show-status-bar="true" show-aggregates="false" filterable="true" pageable="true" auto-height="true" source-id="ID" sortable="true" width="400" source="Model">
+<jqx-grid sortable="true" filterable="true" autoheight="true" width="500" source="Model">
+    <jqx-grid-columns>
+        <jqx-grid-column columngroup="name" datafield="@(activity.Athlete.FirstName)" width="100" text="First Name"></jqx-grid-column>
+        <jqx-grid-column columngroup="name" datafield="@(activity.Athlete.LastName)" width="100" text="Last Name"></jqx-grid-column>
+        <jqx-grid-column datafield="@(activity.Name)" width="150"></jqx-grid-column>
+        <jqx-grid-column datafield="@(activity.Start_date)" width="100"></jqx-grid-column>
+        <jqx-grid-column datafield="@(activity.Id)" width="20"></jqx-grid-column>
+        <jqx-grid-column datafield="@(activity.Athlete.Sex)" width="10"></jqx-grid-column>
+    </jqx-grid-columns>
+    <jqx-grid-column-groups>
+        <jqx-grid-column-group name="name" text="Name"></jqx-grid-column-group>
+    </jqx-grid-column-groups>
+</jqx-grid>
+@*<jqx-grid id="grid" alt-rows="true" show-status-bar="true" show-aggregates="false" filterable="true" pageable="true" auto-height="true" source-id="ID" sortable="true" width="400" source="Model">
     <jqx-grid-columns>
         <jqx-grid-column aggregates='[' count']' datafield-for="@(activity.Id)" width="20" text="ID"></jqx-grid-column>
         <jqx-grid-column aggregates='[' count']' datafield-for="@(activity.Name)" width="150" text="Name"></jqx-grid-column>
         <jqx-grid-column aggregates='[' count']' datafield-for="@(activity.Start_date)" width="100" text="Start Date"></jqx-grid-column>
         <jqx-grid-column aggregates='[' count']' datafield-for="@(activity.Athlete.FirstName)" width="40" text="Athlete Name" cells-format="c2" cells-align="HorizontalAlignment.Right"></jqx-grid-column>
         <jqx-grid-column aggregates='[' count']' datafield-for="@(activity.Athlete.Sex)" width="10" text="Gender" cells-align="HorizontalAlignment.Right"></jqx-grid-column>
-        @*<jqx-grid-column aggregates='[' count']' datafield-for="@(activity.Athlete.SegmentLeaderboard[0].Rank)" width="10" text="Rank" cells-format="c2" cells-align="HorizontalAlignment.Right"></jqx-grid-column>*@
+        <jqx-grid-column aggregates='[' count']' datafield-for="@(activity.Athlete.SegmentLeaderboard[0].Rank)" width="10" text="Rank" cells-format="c2" cells-align="HorizontalAlignment.Right"></jqx-grid-column>
     </jqx-grid-columns>
-</jqx-grid>
+</jqx-grid>*@
+
+@section scripts {
+    <script type="text/javascript">
+        function getInstance(instance) {
+            instance["autoresizecolumns"]();
+        }
+    </script>
+}
 @*<h3>@Html.Raw(Model.Message.ToString())</h3> *@

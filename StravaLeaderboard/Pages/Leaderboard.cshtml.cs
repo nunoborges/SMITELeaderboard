@@ -19,6 +19,7 @@ namespace StravaLeaderboard.Pages
         {
             _apitokens = apitokens.Value;
         }  
+        
         public List<Activity> pageactivities { get; set; }
         public string Message { get; set; }
         
