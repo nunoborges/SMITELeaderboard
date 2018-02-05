@@ -6,17 +6,12 @@ using System.Threading.Tasks;
 
 namespace StravaLeaderboard.models
 {
-    public class Club
+    public partial class Club
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ClubID { get; set; }
         public string Name { get; set; }
         public string Location { get; set; }
         public string Country { get; set; }
-    }
-
-    public class Season
-    {
-
     }
 }

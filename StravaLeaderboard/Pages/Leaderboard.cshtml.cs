@@ -20,9 +20,7 @@ namespace StravaLeaderboard.Pages
             _apitokens = apitokens.Value;
         }  
         
-        public List<Activity> pageactivities { get; set; }
-        public string Message { get; set; }
-        
+        public string Message { get; set; }        
 
         public void OnGet()
         {
@@ -55,7 +53,6 @@ namespace StravaLeaderboard.Pages
             //parse out the segment efforts where a user name match 
             //exists between the effort and the activity above
             Activities = ParseEntries(SegmentEntries, Activities);
-            pageactivities = Activities;
 
             //write leaderboard to console in ranked order
             //TODO: Strava is not returning the json efforts in order of elapsed_time - launched a ticket
