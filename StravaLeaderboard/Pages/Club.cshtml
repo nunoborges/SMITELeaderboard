@@ -1,11 +1,19 @@
 ﻿@page
+@using StravaLeaderboard.models
 @model ClubTableModel
 
-<table class="table">
+
+@(Html.DevExtreme().DataGrid<Club>()
+        .DataSource(Model.Club.ToList())
+)
+)
+
+
+@*<table class="table">
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Club[0].ClubID)
+                    @Html.DisplayNameFor(model => Model.Club[0].ClubID)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Club[0].Name)
@@ -41,5 +49,5 @@
                 </tr>
             }
         </tbody>
-    </table>
+    </table>*@
 

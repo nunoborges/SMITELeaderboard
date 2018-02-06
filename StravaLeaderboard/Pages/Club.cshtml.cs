@@ -12,7 +12,7 @@ namespace StravaLeaderboard.Pages
 {
     public class ClubTableModel : PageModel
     {
-        private readonly DataContext _context;
+        public DataContext _context { get; set; }
 
         public ClubTableModel(DataContext context)
         {
