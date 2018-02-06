@@ -1,0 +1,3 @@
+@using StravaLeaderboard
+@namespace StravaLeaderboard.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
