@@ -22,8 +22,9 @@ namespace StravaLeaderboard.Pages
 
         // London = 14063868 (tim's tongue twister)
         // Watopia = 16730849,16730862,16730897,16730888,16936841,16730909
-        public int[] segments = new int[] { 14063868 };
-        public List<Activity> SegmentLeaderboard = new List<Activity>();       
+        public static int[] segments = new int[] {14063868};
+        List<int>[] a = new List<int>[100];
+        public List<Activity>[] SegmentLeaderboard = new List<Activity>[segments.Length];       
 
         public void OnGet()
         {
@@ -31,7 +32,7 @@ namespace StravaLeaderboard.Pages
             
             for (int x = 0; x < segments.Length; x++)
             {
-                SegmentLeaderboard = FetchStravaData(segments[x]);
+                SegmentLeaderboard[x] = FetchStravaData(segments[x]);
             }
             
         }
@@ -130,7 +131,7 @@ namespace StravaLeaderboard.Pages
         private SegmentEntries GetSegmentEntries(int Segment)
         {
             Uri uri = new Uri("https://www.strava.com/api/v3/segments/" + Segment.ToString() + "/leaderboard?access_token=" +
-                _apitokens.Access_Token +"&per_page=200&context_entries=0&club_id=238810&date_range=today");
+                _apitokens.Access_Token +"&per_page=200&context_entries=0&club_id=238810&date_range=this_week");
             HttpWebRequest httpRequest = (HttpWebRequest)System.Net.WebRequest.Create(uri);
             httpRequest.Method = "GET";
 

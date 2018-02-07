@@ -3,10 +3,41 @@
 @model LeaderboardModel
 
 @{
-    ViewData["Title"] = "Leaderboard";
+    ViewData["Title"] = "Segment Leaderboard";
 }
 <h2>@ViewData["Title"]</h2>
 
 @(Html.DevExtreme().DataGrid<Activity>()
-            .DataSource(Model.SegmentLeaderboard.ToList())
+        .ID("SegmentLeaderboard")
+        .DataSource(Model.SegmentLeaderboard[0].ToList())
+        .ShowBorders(true)
+        .ShowRowLines(true)
+        .Sorting(s => s.Mode(GridSortingMode.Single))
+        .Paging(p => p.PageSize(20))
+        .Columns(col => {
+            col.AddFor(m => m.Athlete.UserName)
+                .Width(150)
+                .Caption("Name");
+            col.AddFor(m => m.Athlete.SegmentLeaderboard[0].Rank)
+                .Width(70)
+                .Caption("Rank");
+            //.SortOrder();
+            col.AddFor(m => m.Athlete.SegmentLeaderboard[0].Elapsed_time)
+                .Width(70)
+                .Caption("Time (S)");
+            col.AddFor(m => m.Athlete.TotalPoints)
+                .Width(70)
+                .Caption("Points");
+            col.AddFor(m => m.Athlete.Sex)
+                .Width(50)
+                .Caption("Sex");
+            col.AddFor(m => m.Name)
+                .Width(200)
+                .Caption("Activity Name");
+            col.AddFor(m => m.Id)
+                .Width(100)
+                // turn Activity ID into a clickable link
+                .Caption("Activity ID");
+        })
+
 )
