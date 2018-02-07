@@ -12,14 +12,14 @@ namespace StravaLeaderboard.Pages
 {
     public class ClubTableModel : PageModel
     {
-        public DataContext _context { get; set; }
+        private DataContext _context;
 
         public ClubTableModel(DataContext context)
         {
             _context = context;
         }
 
-        public List<Club> Club { get;set; }
+        public List<Club> Club { get; set; }
 
         public async Task OnGetAsync()
         {

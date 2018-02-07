@@ -18,24 +18,25 @@ namespace StravaLeaderboard.Pages
         public LeaderboardModel(IOptions<APITokens> apitokens)
         {
             _apitokens = apitokens.Value;
-        }  
-        
-        public string Message { get; set; }        
+        }
+
+        // London = 14063868 (tim's tongue twister)
+        // Watopia = 16730849,16730862,16730897,16730888,16936841,16730909
+        public int[] segments = new int[] { 14063868 };
+        public List<Activity> SegmentLeaderboard = new List<Activity>();       
 
         public void OnGet()
         {
             //_apitokens.Access_Token;
-            // London = 14063868 (tim's tongue twister)
-            // Watopia = 16730849,16730862,16730897,16730888,16936841,16730909
-            int[] segments = new int[] {14063868};
+            
             for (int x = 0; x < segments.Length; x++)
             {
-                Message += FetchStravaData(segments[x]);
+                SegmentLeaderboard = FetchStravaData(segments[x]);
             }
             
         }
 
-        public string FetchStravaData(int segment)
+        public List<Activity> FetchStravaData(int segment)
         {
             //get club activities - limited to top 200
             List<Activity> Activities = GetActivities();
@@ -56,29 +57,32 @@ namespace StravaLeaderboard.Pages
 
             //write leaderboard to console in ranked order
             //TODO: Strava is not returning the json efforts in order of elapsed_time - launched a ticket
-            string results = WriteLeaderboard(Activities, segment);
+            return WriteLeaderboard(Activities, segment);
 
-            return results;
         }
 
-        private string WriteLeaderboard(List<Activity> activities, int segment)
+        private List<Activity> WriteLeaderboard(List<Activity> activities, int segment)
         {
             //try ordering activities with order by
-            List<Activity> sortedActivities = (from activity in activities
-                                               where activity.Athlete.SegmentLeaderboard != null
-                                               orderby activity.Athlete.SegmentLeaderboard[0].Rank
-                                               select activity).ToList();
+            //List<Activity> sortedActivities = (from activity in activities
+            //                                   where activity.Athlete.SegmentLeaderboard != null
+            //                                   orderby activity.Athlete.SegmentLeaderboard[0].Rank
+            //                                   select activity).ToList();
+            return (from activity in activities
+                where activity.Athlete.SegmentLeaderboard != null
+                orderby activity.Athlete.SegmentLeaderboard[0].Rank
+                select activity).ToList();
 
-            string results = "<BR><BR>" + "Segment # " + segment.ToString() + " | Athlete Results #: " + sortedActivities.Count.ToString() + "<BR><BR>";
-            foreach (Activity activity in sortedActivities)
-            {
-                results = results + activity.Athlete.FirstName + " " + activity.Athlete.LastName +
-                " | Rank: " + activity.Athlete.SegmentLeaderboard[0].Rank +
-                " | Points: " + activity.Athlete.SegmentLeaderboard[0].Points +
-                " | Elapsed Time: " + activity.Athlete.SegmentLeaderboard[0].Elapsed_time + "<BR>";
-                //Console.WriteLine("Start Time: " + activity.AthleteID.SegmentLeaderboard[0].Start_date);
-            }
-            return results;
+            //string results = "<BR><BR>" + "Segment # " + segment.ToString() + " | Athlete Results #: " + sortedActivities.Count.ToString() + "<BR><BR>";
+            //foreach (Activity activity in sortedActivities)
+            //{
+            //    results = results + activity.Athlete.FirstName + " " + activity.Athlete.LastName +
+            //    " | Rank: " + activity.Athlete.SegmentLeaderboard[0].Rank +
+            //    " | Points: " + activity.Athlete.SegmentLeaderboard[0].Points +
+            //    " | Elapsed Time: " + activity.Athlete.SegmentLeaderboard[0].Elapsed_time + "<BR>";
+            //    //Console.WriteLine("Start Time: " + activity.AthleteID.SegmentLeaderboard[0].Start_date);
+            //}
+            //return results;
         }
 
         public List<Activity> GetActivities()

@@ -1,4 +1,5 @@
 ﻿@page
+@using StravaLeaderboard.models
 @model LeaderboardModel
 
 @{
@@ -6,4 +7,6 @@
 }
 <h2>@ViewData["Title"]</h2>
 
-<h3>@Html.Raw(Model.Message.ToString())</h3>
+@(Html.DevExtreme().DataGrid<Activity>()
+            .DataSource(Model.SegmentLeaderboard.ToList())
+)
