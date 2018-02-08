@@ -7,7 +7,7 @@
 }
 <h2>@ViewData["Title"]</h2>
 
-@*@(Html.DevExtreme().TabPanel()
+@(Html.DevExtreme().TabPanel()
             .ID("SegmentLeaderboard-TabPanel")
             .Height(500)
             .DataSource(Model.SegmentLeaderboard.ToList())
@@ -18,7 +18,7 @@
 
         .ItemTitleTemplate(@<text><span><%= Name %></span></text>)                
             .ItemTemplate(@<text>
-                    @Html.DevExtreme().DataGrid<Activity>()
+                    @(Html.DevExtreme().DataGrid<Activity>()
                         .ID("SegmentLeaderboard")
                         //.DataSource(Model.SegmentActivities.ToList())
                         .ShowBorders(true)
@@ -50,12 +50,12 @@
                                 .Width(100)
                                 // turn Activity ID into a clickable link
                                 .Caption("Activity ID");
-                        })
+                        }))
 
                     </text>
                     )
 
-)*@
+)
 
 
 @(Html.DevExtreme().DataGrid<Activity>()
