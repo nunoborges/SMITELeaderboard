@@ -33,7 +33,7 @@ namespace StravaLeaderboard.models
         public string LastName { get; set; }
         public Uri Profile { get; set; }
 
-        public List<SegmentLeaderboard> SegmentLeaderboard { get; set; }
+        public List<SegmentResults> SegmentResults { get; set; }
 
         //Segment Results
         private int segmentCount = 0;

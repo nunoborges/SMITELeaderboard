@@ -20,19 +20,22 @@ namespace StravaLeaderboard.Pages
             _apitokens = apitokens.Value;
         }
 
-        // London = 14063868 (tim's tongue twister)
+        // London = 14063868,13619366 (tim's tongue twister)
         // Watopia = 16730849,16730862,16730897,16730888,16936841,16730909
-        public static int[] segments = new int[] {14063868};
-        List<int>[] a = new List<int>[100];
-        public List<Activity>[] SegmentLeaderboard = new List<Activity>[segments.Length];       
+        public static int[] segments = new int[] {14063868,13619366};
 
+        public List<Activity> SegmentActivities = new List<Activity>();
+        public List<SegmentLeaderboard> SegmentLeaderboard = new List<SegmentLeaderboard>();
         public void OnGet()
         {
             //_apitokens.Access_Token;
-            
+
             for (int x = 0; x < segments.Length; x++)
             {
-                SegmentLeaderboard[x] = FetchStravaData(segments[x]);
+                SegmentActivities = FetchStravaData(segments[x]);
+                SegmentLeaderboard.Add(new SegmentLeaderboard() {
+                    Name="SMITE: blah"+x.ToString(),ID=2342343,Type="Green",World="Watopia",Activity=SegmentActivities
+            });
             }
             
         }
@@ -69,10 +72,13 @@ namespace StravaLeaderboard.Pages
             //                                   where activity.Athlete.SegmentLeaderboard != null
             //                                   orderby activity.Athlete.SegmentLeaderboard[0].Rank
             //                                   select activity).ToList();
+
             return (from activity in activities
-                where activity.Athlete.SegmentLeaderboard != null
-                orderby activity.Athlete.SegmentLeaderboard[0].Rank
+                where activity.Athlete.SegmentResults != null
+                orderby activity.Athlete.SegmentResults[0].Rank
                 select activity).ToList();
+
+            //TODO: create a list of SegmentsLeaderboards
 
             //string results = "<BR><BR>" + "Segment # " + segment.ToString() + " | Athlete Results #: " + sortedActivities.Count.ToString() + "<BR><BR>";
             //foreach (Activity activity in sortedActivities)
@@ -164,9 +170,9 @@ namespace StravaLeaderboard.Pages
 
                     if (segmentEntry.Athlete_name.ToLower().Equals(activity.Athlete.FirstName.ToLower() + " " + activity.Athlete.LastName.Substring(0, 1).ToLower() + "."))
                     {
-                        activity.Athlete.SegmentLeaderboard = new List<SegmentLeaderboard>
+                        activity.Athlete.SegmentResults = new List<SegmentResults>
                             {
-                                new SegmentLeaderboard() {
+                                new SegmentResults() {
                                     Rank = rankCounter,
                                     Start_date = segmentEntry.Start_date,
                                     Elapsed_time = segmentEntry.Elapsed_time,

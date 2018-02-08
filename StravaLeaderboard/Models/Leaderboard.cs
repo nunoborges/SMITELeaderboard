@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace StravaLeaderboard.models
 {
-    public class SegmentLeaderboard
+    public class SegmentResults
     {
         public int SegmentLeaderboardID { get; set; }
         public string SegmentType { get; set; }
