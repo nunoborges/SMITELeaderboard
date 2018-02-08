@@ -59,7 +59,10 @@
     @(Html.DevExtreme().DataGrid<Activity>()
                 .ID("segment-leaderboard")
                 .ShowBorders(true)
-                .DataSource(Model.SegmentLeaderboard[0].Activity)
+                .DataSource(Model.SegmentLeaderboard.ToList())
+                .DataSourceOptions(d => d
+                    .Filter("['ID', '=','13619366']")
+                )
                 .Paging(p => p.PageSize(20))
                 .Columns(columns =>
                 {
