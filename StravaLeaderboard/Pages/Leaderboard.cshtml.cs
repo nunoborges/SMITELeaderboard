@@ -49,7 +49,7 @@ namespace StravaLeaderboard.Pages
             Activities = ParseActivities(Activities);
 
             //save activities in SQLite
-            SaveActivities(Activities);
+            //SaveActivities(Activities);
 
             //get Segment Leaderboard for list of segments
             //TODO: go to contentful to get the segment list and iterate through each
@@ -129,10 +129,10 @@ namespace StravaLeaderboard.Pages
             return ParsedActivities;
         }
 
-        public async void SaveActivities(List<Activity> activities)
-        {
+        //public async void SaveActivities(List<Activity> activities)
+        //{
 
-        }
+        //}
 
         private SegmentEntries GetSegmentEntries(int Segment)
         {

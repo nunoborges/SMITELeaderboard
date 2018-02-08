@@ -7,7 +7,71 @@
 }
 <h2>@ViewData["Title"]</h2>
 
-@(Html.DevExtreme().TabPanel()
+@(Html.DevExtreme().DataGrid<SegmentLeaderboard>()
+                .ID("Segment-Master-Grid")
+                .DataSource(Model.SegmentLeaderboard.ToList())
+                .ShowBorders(true)
+                .ShowRowLines(true)
+                .Sorting(s => s.Mode(GridSortingMode.Single))
+                .Paging(p => p.PageSize(10))
+                .Columns(col =>
+                {
+                    col.AddFor(m => m.ID)
+                        .Width(150)
+                        .Caption("ID");
+                    col.AddFor(m => m.Name)
+                        .Caption("Name");
+                    col.AddFor(m => m.World)
+                        .Width(150)
+                        .Caption("World");
+                    col.AddFor(m => m.Type)
+                        .Width(150)
+                        .Caption("Type");
+                })
+                .MasterDetail(m => m
+                    .Enabled(true)
+                    .Template(new TemplateName("gridContainer-details"))
+                )
+)
+
+@using (Html.DevExtreme().NamedTemplate("gridContainer-details"))
+{
+    @(Html.DevExtreme().TabPanel()
+                        .FocusStateEnabled(false)
+                        .ElementAttr("class", "tabPanel-orders")
+                        .Items(items =>
+                        {
+                            items.Add()
+                                .Title("Leaderboard")
+                                .Template(new TemplateName("gridContainer-details-tab1Template"))
+                                .Option("tabExtras", new { supplierID = new JS("data.SupplierID") });
+
+                            items.Add()
+                                .Title("Segment Details")
+                                .Template(new TemplateName("gridContainer-details-tab2Template"))
+                                .Option("tabExtras", new JS("data"));
+                        })
+    )
+}
+
+@using (Html.DevExtreme().NamedTemplate("gridContainer-details-tab1Template"))
+{
+    @(Html.DevExtreme().DataGrid<Activity>()
+                .ID("segment-leaderboard")
+                .ShowBorders(true)
+                .DataSource(Model.SegmentLeaderboard[0].Activity)
+                .Paging(p => p.PageSize(20))
+                .Columns(columns =>
+                {
+                    columns.Add().DataField("Id");
+                    columns.Add().DataField("Name");
+
+                })
+    )
+}
+
+
+@*@(Html.DevExtreme().TabPanel()
             .ID("SegmentLeaderboard-TabPanel")
             .Height(500)
             .DataSource(Model.SegmentLeaderboard.ToList())
@@ -15,44 +79,55 @@
             .Loop(false)
             .AnimationEnabled(true)
             .SwipeEnabled(true)
+            .ItemTitleTemplate(@<text><span><%= Name %></span></text>)
+                .ItemTemplate(@<text>
+                        @(Html.DevExtreme().DataGrid<Activity>()
+                            .ID("SegmentLeaderboard-Grid")
+                            .DataSource(Model.SegmentLeaderboard[0].Activity)
+                            .ShowBorders(true)
+                            .ShowRowLines(true)
+                            .Sorting(s => s.Mode(GridSortingMode.Single))
+                            .Paging(p => p.PageSize(20))
+                            .Columns(col =>
+                            {
+                                col.AddFor(m => m.Athlete.UserName)
+                                    .Width(150)
+                                    .Caption("Name");
+                                col.AddFor(m => m.Athlete.SegmentResults[0].Rank)
+                                    .Width(70)
+                                    .Caption("Rank");
+                                //.SortOrder();
+                                col.AddFor(m => m.Athlete.SegmentResults[0].Elapsed_time)
+                                    .Width(70)
+                                    .Caption("Time (S)");
+                                col.AddFor(m => m.Athlete.TotalPoints)
+                                    .Width(70)
+                                    .Caption("Points");
+                                col.AddFor(m => m.Athlete.Sex)
+                                    .Width(50)
+                                    .Caption("Sex");
+                                col.AddFor(m => m.Name)
+                                    .Width(200)
+                                    .Caption("Activity Name");
+                                col.AddFor(m => m.Id)
+                                    .Width(100)
+                                    // turn Activity ID into a clickable link
+                                    .Caption("Activity ID");
+                            }))
 
-        .ItemTitleTemplate(@<text><span><%= Name %></span></text>)                
-            .ItemTemplate(@<text>
-                    @(Html.DevExtreme().DataGrid<Activity>()
-                        .ID("SegmentLeaderboardb")
-                        .DataSource(Model.SegmentLeaderboard[0].Activity)
-                        .ShowBorders(true)
-                        .ShowRowLines(true)
-                        .Sorting(s => s.Mode(GridSortingMode.Single))
-                        .Paging(p => p.PageSize(20))
-                        .Columns(col =>
-                        {
-                            col.AddFor(m => m.Athlete.UserName)
-                                .Width(150)
-                                .Caption("Namea");
-                            col.AddFor(m => m.Athlete.SegmentResults[0].Rank)
-                                .Width(70)
-                                .Caption("Rank");
-                            //.SortOrder();
-                            col.AddFor(m => m.Athlete.SegmentResults[0].Elapsed_time)
-                                .Width(70)
-                                .Caption("Time (S)");
-                            col.AddFor(m => m.Athlete.TotalPoints)
-                                .Width(70)
-                                .Caption("Points");
-                            col.AddFor(m => m.Athlete.Sex)
-                                .Width(50)
-                                .Caption("Sex");
-                            col.AddFor(m => m.Name)
-                                .Width(200)
-                                .Caption("Activity Name");
-                            col.AddFor(m => m.Id)
-                                .Width(100)
-                                // turn Activity ID into a clickable link
-                                .Caption("Activity ID");
-                        }))
+                        </text>
+                        )
+            .OnSelectionChanged("tabPanelSelection_changed")
+    )
 
-                    </text>
-                    )
-
-)
+    <script>
+        function tabPanelSelection_changed(e) {
+            $("h2")
+                .text(e.component.option("selectedIndex"));
+            getTabPanelInstance().option("dataSource", Model.SegmentLeaderboard[e.value].Activity.);
+            $("#SegmentLeaderboard-Grid").dxDataGrid("instance").refresh();
+        }
+        function getTabPanelInstance() {
+            return $("#SegmentLeaderboard-Grid").dxDataGrid("instance");
+        }
+    </script>*@
