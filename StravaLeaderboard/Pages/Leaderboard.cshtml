@@ -8,71 +8,71 @@
 <h2>@ViewData["Title"]</h2>
 
 @(Html.DevExtreme().DataGrid<SegmentLeaderboard>()
-                .ID("Segment-Master-Grid")
-                .DataSource(Model.SegmentLeaderboard.ToList())
-                .ShowBorders(true)
-                .ShowRowLines(true)
-                .Sorting(s => s.Mode(GridSortingMode.Single))
-                .Paging(p => p.PageSize(10))
-                .Columns(col =>
-                {
-                    col.AddFor(m => m.ID)
-                        .Width(150)
-                        .Caption("ID");
-                    col.AddFor(m => m.Name)
-                        .Caption("Name");
-                    col.AddFor(m => m.World)
-                        .Width(150)
-                        .Caption("World");
-                    col.AddFor(m => m.Type)
-                        .Width(150)
-                        .Caption("Type");
-                })
-                .MasterDetail(m => m
-                    .Enabled(true)
-                    .Template(new TemplateName("gridContainer-details"))
-                )
+                        .ID("Segment-Master-Grid")
+                        .DataSource(Model.SegmentLeaderboard)
+                        .ShowBorders(true)
+                        .ShowRowLines(true)
+                        .Sorting(s => s.Mode(GridSortingMode.Single))
+                        .Paging(p => p.PageSize(10))
+                        .Columns(col =>
+                        {
+                            col.AddFor(m => m.ID)
+                                .Width(150)
+                                .Caption("ID");
+                            col.AddFor(m => m.Name)
+                                .Caption("Name");
+                            col.AddFor(m => m.World)
+                                .Width(150)
+                                .Caption("World");
+                            col.AddFor(m => m.Type)
+                                .Width(150)
+                                .Caption("Type");
+                        })
+                        .MasterDetail(m => m
+                            .Enabled(true)
+                            .Template(@<text>
+                            <div class="master-detail-caption"><%= data.ID %>  <%= data.Name %></div>
+                            @(Html.DevExtreme().DataGrid<Activity>()
+                                        .ID("segment-leaderboard")
+                                        .ShowBorders(true)
+                                        .DataSource(new JS("data.Activity"))
+                                        //.DataSourceOptions(d => d
+                                        //    .Filter("['ID', '=',2342343]")
+                                        //)
+                                        .Paging(p => p.PageSize(20))
+                                        .Columns(col =>
+                                        {
+                                            col.AddFor(a => a.Id)
+                                                .Width(100)
+                                                .Caption("Id");
+                                            col.AddFor(a => a.Athlete.UserName)
+                                                .Caption("Name");
+
+                                        })
+                            )
+                            </text>)
+                        )
 )
 
-@using (Html.DevExtreme().NamedTemplate("gridContainer-details"))
-{
-    @(Html.DevExtreme().TabPanel()
-                        .FocusStateEnabled(false)
-                        .ElementAttr("class", "tabPanel-orders")
-                        .Items(items =>
-                        {
-                            items.Add()
-                                .Title("Leaderboard")
-                                .Template(new TemplateName("gridContainer-details-tab1Template"))
-                                .Option("tabExtras", new { supplierID = new JS("data.SupplierID") });
+@*@using (Html.DevExtreme().NamedTemplate("gridContainer-details"))
+        {
+            @(Html.DevExtreme().TabPanel()
+                                .FocusStateEnabled(false)
+                                .ElementAttr("class", "tabPanel-orders")
+                                .Items(items =>
+                                {
+                                    items.Add()
+                                        .Title("Leaderboard")
+                                        .Template(new TemplateName("gridContainer-details-tab1Template"))
+                                        .Option("tabExtras", new { supplierID = new JS("data.SupplierID") });
 
-                            items.Add()
-                                .Title("Segment Details")
-                                .Template(new TemplateName("gridContainer-details-tab2Template"))
-                                .Option("tabExtras", new JS("data"));
-                        })
-    )
-}
-
-@using (Html.DevExtreme().NamedTemplate("gridContainer-details-tab1Template"))
-{
-    @(Html.DevExtreme().DataGrid<Activity>()
-                .ID("segment-leaderboard")
-                .ShowBorders(true)
-                .DataSource(Model.SegmentLeaderboard.ToList())
-                .DataSourceOptions(d => d
-                    .Filter("['ID', '=','13619366']")
-                )
-                .Paging(p => p.PageSize(20))
-                .Columns(columns =>
-                {
-                    columns.Add().DataField("Id");
-                    columns.Add().DataField("Name");
-
-                })
-    )
-}
-
+                                    items.Add()
+                                        .Title("Segment Details")
+                                        .Template(new TemplateName("gridContainer-details-tab2Template"))
+                                        .Option("tabExtras", new JS("data"));
+                                })
+            )
+    }*@
 
 @*@(Html.DevExtreme().TabPanel()
             .ID("SegmentLeaderboard-TabPanel")

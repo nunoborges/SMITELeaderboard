@@ -22,7 +22,7 @@ namespace StravaLeaderboard.Pages
 
         // London = 14063868,13619366 (tim's tongue twister)
         // Watopia = 16730849,16730862,16730897,16730888,16936841,16730909
-        public static int[] segments = new int[] {14063868,13619366};
+        public static int[] segments = new int[] {16730849,16730862};
 
         public List<Activity> SegmentActivities = new List<Activity>();
         public List<SegmentLeaderboard> SegmentLeaderboard = new List<SegmentLeaderboard>();
@@ -123,7 +123,7 @@ namespace StravaLeaderboard.Pages
         public List<Activity> ParseActivities(List<Activity> activities)
         {
             List<Activity> ParsedActivities = (from activity in activities
-                                               where activity.Name.ToLower().Contains("london")
+                                               where activity.Name.ToLower().Contains("watopia")
                                                select activity).ToList();
 
             return ParsedActivities;
