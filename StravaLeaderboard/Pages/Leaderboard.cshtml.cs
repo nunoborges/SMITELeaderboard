@@ -22,7 +22,7 @@ namespace StravaLeaderboard.Pages
 
         // London = 14063868,13619366 (tim's tongue twister)
         // Watopia = 16730849,16730862,16730897,16730888,16936841,16730909
-        public static int[] segments = new int[] {16730849,16730862};
+        public static int[] segments = new int[] {13855855,14485439,13521759,14250115};
 
         public List<Activity> SegmentActivities = new List<Activity>();
         public List<SegmentLeaderboard> SegmentLeaderboard = new List<SegmentLeaderboard>();
@@ -43,23 +43,25 @@ namespace StravaLeaderboard.Pages
         public List<Activity> FetchStravaData(int segment)
         {
             //get club activities - limited to top 200
+            //TODO: don't need to get Activities multiple times
             List<Activity> Activities = GetActivities();
 
             //parse out activites with "SMITE" in title
+            //TODO: don't need to do this multiple times
             Activities = ParseActivities(Activities);
 
-            //save activities in SQLite
+            //TODO: save activities in SQLite
             //SaveActivities(Activities);
 
             //get Segment Leaderboard for list of segments
-            //TODO: go to contentful to get the segment list and iterate through each
+            //TODO: Add segment to SQLite if does not exist
             SegmentEntries SegmentEntries = GetSegmentEntries(segment);
 
             //parse out the segment efforts where a user name match 
             //exists between the effort and the activity above
             Activities = ParseEntries(SegmentEntries, Activities);
 
-            //write leaderboard to console in ranked order
+            //write leaderboard to Leaderboard.cshtml in ranked order
             //TODO: Strava is not returning the json efforts in order of elapsed_time - launched a ticket
             return WriteLeaderboard(Activities, segment);
 
@@ -137,7 +139,7 @@ namespace StravaLeaderboard.Pages
         private SegmentEntries GetSegmentEntries(int Segment)
         {
             Uri uri = new Uri("https://www.strava.com/api/v3/segments/" + Segment.ToString() + "/leaderboard?access_token=" +
-                _apitokens.Access_Token +"&per_page=200&context_entries=0&club_id=238810&date_range=this_week");
+                _apitokens.Access_Token +"&per_page=200&context_entries=0&club_id=238810&date_range=today");
             HttpWebRequest httpRequest = (HttpWebRequest)System.Net.WebRequest.Create(uri);
             httpRequest.Method = "GET";
 
