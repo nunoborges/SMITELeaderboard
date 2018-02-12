@@ -32,7 +32,7 @@
                             .Enabled(true)
                             .Template(@<text>
                             <div class="master-detail-caption"><%= data.ID %>  <%= data.Name %></div>
-                            @(Html.DevExtreme().DataGrid<Activity>()
+                            @(Html.DevExtreme().DataGrid<JSONActivity>()
                                         .ID("segment-leaderboard")
                                         .ShowBorders(true)
                                         .DataSource(new JS("data.Activity"))

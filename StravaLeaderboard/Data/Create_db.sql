@@ -17,6 +17,7 @@ CREATE TABLE Season (
     Start_date date NOT NULL,
     End_date date NOT NULL,
     Club_ClubId integer NOT NULL,
+	Keyword text NOT NULL,
     CONSTRAINT Season_Club FOREIGN KEY (Club_ClubId)
     REFERENCES Club (ClubId)
 );

@@ -24,7 +24,7 @@ namespace StravaLeaderboard.Pages
         // Watopia = 16730849,16730862,16730897,16730888,16936841,16730909
         public static int[] segments = new int[] {13855855,14485439,13521759,14250115};
 
-        public List<Activity> SegmentActivities = new List<Activity>();
+        public List<JSONActivity> SegmentActivities = new List<JSONActivity>();
         public List<SegmentLeaderboard> SegmentLeaderboard = new List<SegmentLeaderboard>();
         public void OnGet()
         {
@@ -40,11 +40,11 @@ namespace StravaLeaderboard.Pages
             
         }
 
-        public List<Activity> FetchStravaData(int segment)
+        public List<JSONActivity> FetchStravaData(int segment)
         {
             //get club activities - limited to top 200
             //TODO: don't need to get Activities multiple times
-            List<Activity> Activities = GetActivities();
+            List<JSONActivity> Activities = GetActivities();
 
             //parse out activites with "SMITE" in title
             //TODO: don't need to do this multiple times
@@ -67,7 +67,7 @@ namespace StravaLeaderboard.Pages
 
         }
 
-        private List<Activity> WriteLeaderboard(List<Activity> activities, int segment)
+        private List<JSONActivity> WriteLeaderboard(List<JSONActivity> activities, int segment)
         {
             //try ordering activities with order by
             //List<Activity> sortedActivities = (from activity in activities
@@ -94,7 +94,7 @@ namespace StravaLeaderboard.Pages
             //return results;
         }
 
-        public List<Activity> GetActivities()
+        public List<JSONActivity> GetActivities()
         {
             Uri uri = new Uri("https://www.strava.com/api/v3/clubs/238810/activities?access_token=" +
             _apitokens.Access_Token +
@@ -117,14 +117,14 @@ namespace StravaLeaderboard.Pages
                 //return response;
             }
 
-            List<Activity> deserializedObject = JsonConvert.DeserializeObject<List<Activity>>(response);
+            List<JSONActivity> deserializedObject = JsonConvert.DeserializeObject<List<JSONActivity>>(response);
 
             return deserializedObject;
         }
 
-        public List<Activity> ParseActivities(List<Activity> activities)
+        public List<JSONActivity> ParseActivities(List<JSONActivity> activities)
         {
-            List<Activity> ParsedActivities = (from activity in activities
+            List<JSONActivity> ParsedActivities = (from activity in activities
                                                where activity.Name.ToLower().Contains("watopia")
                                                select activity).ToList();
 
@@ -159,7 +159,7 @@ namespace StravaLeaderboard.Pages
             return deserializedObject;
         }
 
-        private List<Activity> ParseEntries(SegmentEntries segmentEntries, List<Activity> activities)
+        private List<JSONActivity> ParseEntries(SegmentEntries segmentEntries, List<JSONActivity> activities)
         {
             int points = 10;
             int rankCounter = 1;
@@ -167,7 +167,7 @@ namespace StravaLeaderboard.Pages
             foreach (var segmentEntry in segmentEntries.Entries)
             {
 
-                foreach (Activity activity in activities)
+                foreach (JSONActivity activity in activities)
                 {
 
                     if (segmentEntry.Athlete_name.ToLower().Equals(activity.Athlete.FirstName.ToLower() + " " + activity.Athlete.LastName.Substring(0, 1).ToLower() + "."))

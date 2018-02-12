@@ -7,7 +7,7 @@ namespace StravaLeaderboard.models
 {
 
 
-    public class Activity
+    public class JSONActivity
     {
         //activity members
         public int Id { get; set; }
