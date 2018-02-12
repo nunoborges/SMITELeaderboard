@@ -55,7 +55,7 @@ namespace StravaLeaderboard.Pages
 
             //get Segment Leaderboard for list of segments
             //TODO: Add segment to SQLite if does not exist
-            SegmentEntries SegmentEntries = GetSegmentEntries(segment);
+            RAWResults SegmentEntries = GetSegmentEntries(segment);
 
             //parse out the segment efforts where a user name match 
             //exists between the effort and the activity above
@@ -136,7 +136,7 @@ namespace StravaLeaderboard.Pages
 
         //}
 
-        private SegmentEntries GetSegmentEntries(int Segment)
+        private RAWResults GetSegmentEntries(int Segment)
         {
             Uri uri = new Uri("https://www.strava.com/api/v3/segments/" + Segment.ToString() + "/leaderboard?access_token=" +
                 _apitokens.Access_Token +"&per_page=200&context_entries=0&club_id=238810&date_range=today");
@@ -154,12 +154,12 @@ namespace StravaLeaderboard.Pages
                 responseStream.Close();
             }
 
-            SegmentEntries deserializedObject = JsonConvert.DeserializeObject<SegmentEntries>(response);
+            RAWResults deserializedObject = JsonConvert.DeserializeObject<RAWResults>(response);
 
             return deserializedObject;
         }
 
-        private List<JSONActivity> ParseEntries(SegmentEntries segmentEntries, List<JSONActivity> activities)
+        private List<JSONActivity> ParseEntries(RAWResults segmentEntries, List<JSONActivity> activities)
         {
             int points = 10;
             int rankCounter = 1;
@@ -172,13 +172,13 @@ namespace StravaLeaderboard.Pages
 
                     if (segmentEntry.Athlete_name.ToLower().Equals(activity.Athlete.FirstName.ToLower() + " " + activity.Athlete.LastName.Substring(0, 1).ToLower() + "."))
                     {
-                        activity.Athlete.SegmentResults = new List<SegmentResults>
+                        activity.Athlete.SegmentResults = new List<JSONResults>
                             {
-                                new SegmentResults() {
+                                new JSONResults() {
                                     Rank = rankCounter,
                                     Start_date = segmentEntry.Start_date,
-                                    Elapsed_time = segmentEntry.Elapsed_time,
-                                    Points = points
+                                    Elapsed_time = segmentEntry.Elapsed_time
+                                    //Points = points
                                 }
                             };
 

@@ -32,7 +32,7 @@ namespace StravaLeaderboard.models
         public string LastName { get; set; }
         public Uri Profile { get; set; }
 
-        public List<SegmentResults> SegmentResults { get; set; }
+        public List<JSONResults> SegmentResults { get; set; }
 
         ////Segment Results
         //private int segmentCount = 0;
@@ -71,18 +71,25 @@ namespace StravaLeaderboard.models
         //}
     }
 
-    public class SegmentEntries
+    public class JSONResults
     {
-        public int SegmentEntriesID { get; set; }
+        public int SegmentID { get; set; }
+        public int Rank { get; set; } = 0;
+        public int Elapsed_time { get; set; }
+        public DateTime Start_date { get; set; }
+
+    }
+
+    public class RAWResults
+    {
         public int Entry_count { get; set; }
 
         //reference members
-        public List<Entries> Entries { get; set; }
+        public List<RAWEntries> Entries { get; set; }
     }
 
-    public class Entries
+    public class RAWEntries
     {
-        public int EntriesID { get; set; }
         public string Athlete_name { get; set; }
         public int Elapsed_time { get; set; }
         public int Rank { get; set; }
