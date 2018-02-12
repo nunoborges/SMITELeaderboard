@@ -19,11 +19,10 @@ namespace StravaLeaderboard.models
         public Boolean Flagged { get; set; }
 
         //reference members
-        public Athlete Athlete { get; set; }
-        //public int EventID { get; set; }
+        public JSONAthlete Athlete { get; set; }
     }
 
-    public class Athlete
+    public class JSONAthlete
     {
         //Athlete details members
         public int Id { get; set; }
@@ -38,7 +37,8 @@ namespace StravaLeaderboard.models
         //Segment Results
         private int segmentCount = 0;
         public int SegmentCount
-        {   get
+        {
+            get
             { return segmentCount; }
             set
             { segmentCount = value; }
