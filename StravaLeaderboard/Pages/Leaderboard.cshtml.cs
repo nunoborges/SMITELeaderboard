@@ -182,13 +182,13 @@ namespace StravaLeaderboard.Pages
                                 }
                             };
 
-                        activity.Athlete.TotalPoints = activity.Athlete.TotalPoints + points;
-                        //TODO: if polka points then add
-                        activity.Athlete.PolkaPoints = activity.Athlete.PolkaPoints + points;
-                        //TODO: if green points then add
-                        activity.Athlete.GreenPoints = activity.Athlete.GreenPoints + points;
-                        points = (points == 0) ? 0 : points - 2;
-                        activity.Athlete.SegmentCount++;
+                        //activity.Athlete.TotalPoints = activity.Athlete.TotalPoints + points;
+                        ////TODO: if polka points then add
+                        //activity.Athlete.PolkaPoints = activity.Athlete.PolkaPoints + points;
+                        ////TODO: if green points then add
+                        //activity.Athlete.GreenPoints = activity.Athlete.GreenPoints + points;
+                        //points = (points == 0) ? 0 : points - 2;
+                        //activity.Athlete.SegmentCount++;
                         rankCounter++;
                         break;
                     }

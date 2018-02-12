@@ -38,7 +38,7 @@
                                         .DataSource(new JS("data.Activity"))
                                         .Paging(p => p.PageSize(20))
                                         .Columns(col =>
-                                        {                                            
+                                        {
                                             col.AddFor(a => a.Id)
                                                 .Width(100)
                                                 .Caption("Id");
@@ -50,8 +50,8 @@
                                                 .Caption("Time (sec)");
                                             col.AddFor(a => a.Athlete.Sex)
                                                 .Caption("Sex");
-                                            col.AddFor(a => a.Athlete.TotalPoints)
-                                                .Caption("Points");
+                                            //col.AddFor(a => a.Athlete.TotalPoints)
+                                            //    .Caption("Points");
                                             col.AddFor(a => a.Athlete.SegmentResults[0].Rank)
                                                 .Caption("Rank");
                                         })

@@ -34,42 +34,41 @@ namespace StravaLeaderboard.models
 
         public List<SegmentResults> SegmentResults { get; set; }
 
-        //Segment Results
-        private int segmentCount = 0;
-        public int SegmentCount
-        {
-            get
-            { return segmentCount; }
-            set
-            { segmentCount = value; }
-        }
+        ////Segment Results
+        //private int segmentCount = 0;
+        //public int SegmentCount
+        //{   get
+        //    { return segmentCount; }
+        //    set
+        //    { segmentCount = value; }
+        //}
 
-        private int greenPoints = 0;
-        public int GreenPoints
-        {
-            get
-            { return greenPoints; }
-            set
-            { greenPoints = value; }
-        }
+        //private int greenPoints = 0;
+        //public int GreenPoints
+        //{
+        //    get
+        //    { return greenPoints; }
+        //    set
+        //    { greenPoints = value; }
+        //}
 
-        private int polkaPoints = 0;
-        public int PolkaPoints
-        {
-            get
-            { return polkaPoints; }
-            set
-            { polkaPoints = value; }
-        }
+        //private int polkaPoints = 0;
+        //public int PolkaPoints
+        //{
+        //    get
+        //    { return polkaPoints; }
+        //    set
+        //    { polkaPoints = value; }
+        //}
 
-        private int totalPoints = 0;
-        public int TotalPoints
-        {
-            get
-            { return totalPoints; }
-            set
-            { totalPoints = value; }
-        }
+        //private int totalPoints = 0;
+        //public int TotalPoints
+        //{
+        //    get
+        //    { return totalPoints; }
+        //    set
+        //    { totalPoints = value; }
+        //}
     }
 
     public class SegmentEntries
