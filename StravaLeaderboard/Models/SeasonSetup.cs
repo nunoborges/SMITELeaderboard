@@ -23,6 +23,7 @@ namespace StravaLeaderboard.models
 
         //reference members
         public ICollection<SeasonAthlete> SeasonAthletes { get; set; }
+        public List<Season> Seasons { get; set; }
         public Club Club { get; set; }
     }
 

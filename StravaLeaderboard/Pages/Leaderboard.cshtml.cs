@@ -22,10 +22,11 @@ namespace StravaLeaderboard.Pages
 
         // London = 14063868,13619366 (tim's tongue twister)
         // Watopia = 16730849,16730862,16730897,16730888,16936841,16730909
-        public static int[] segments = new int[] {13855855,14485439,13521759,14250115};
+        // watopia SMITE Feb 10 = 13855855,14485439,13521759,14250115
+        public static int[] segments = new int[] {14063868,13619366};
 
         public List<JSONActivity> SegmentActivities = new List<JSONActivity>();
-        public List<SegmentLeaderboard> SegmentLeaderboard = new List<SegmentLeaderboard>();
+        public List<Segment> SegmentLeaderboard = new List<Segment>();
         public void OnGet()
         {
             //_apitokens.Access_Token;
@@ -33,7 +34,7 @@ namespace StravaLeaderboard.Pages
             for (int x = 0; x < segments.Length; x++)
             {
                 SegmentActivities = FetchStravaData(segments[x]);
-                SegmentLeaderboard.Add(new SegmentLeaderboard() {
+                SegmentLeaderboard.Add(new Segment() {
                     Name="SMITE: blah"+x.ToString(),ID=2342343,Type="Green",World="Watopia",Activity=SegmentActivities
             });
             }
@@ -125,7 +126,7 @@ namespace StravaLeaderboard.Pages
         public List<JSONActivity> ParseActivities(List<JSONActivity> activities)
         {
             List<JSONActivity> ParsedActivities = (from activity in activities
-                                               where activity.Name.ToLower().Contains("watopia")
+                                               where activity.Name.ToLower().Contains("london")
                                                select activity).ToList();
 
             return ParsedActivities;
@@ -139,7 +140,7 @@ namespace StravaLeaderboard.Pages
         private RAWResults GetSegmentEntries(int Segment)
         {
             Uri uri = new Uri("https://www.strava.com/api/v3/segments/" + Segment.ToString() + "/leaderboard?access_token=" +
-                _apitokens.Access_Token +"&per_page=200&context_entries=0&club_id=238810&date_range=today");
+                _apitokens.Access_Token +"&per_page=200&context_entries=0&club_id=238810&date_range=this_week");
             HttpWebRequest httpRequest = (HttpWebRequest)System.Net.WebRequest.Create(uri);
             httpRequest.Method = "GET";
 
