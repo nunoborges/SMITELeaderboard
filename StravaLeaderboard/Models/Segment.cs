@@ -13,6 +13,8 @@ namespace StravaLeaderboard.models
         public string Type { get; set; }
         public string World { get; set; }
         public List<JSONActivity> Activity { get; set; }
-        //TODO: add foreign key to Event
+
+        //reference members
+        public ICollection<EventSegment> EventSegments { get; set; }
     }
 }

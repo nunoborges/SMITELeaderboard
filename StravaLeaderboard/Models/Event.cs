@@ -14,6 +14,7 @@ namespace StravaLeaderboard.models
 
         //reference members
         public Season Season { get; set; }
+        public ICollection<EventSegment> EventSegments { get; set; }
     }
 
     //JOIN Table between Event and Segment
