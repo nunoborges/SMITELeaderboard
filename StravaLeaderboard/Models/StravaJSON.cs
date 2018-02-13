@@ -96,6 +96,9 @@ namespace StravaLeaderboard.models
         public DateTime Start_date { get; set; }
     }
 
+    public class JSONSegment
+    {
 
+    }
 
 }

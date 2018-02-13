@@ -10,6 +10,10 @@ namespace StravaLeaderboard.Data
         }
 
         public DbSet<Club> Clubs { get; set; }
+        public DbSet<Season> Seasons { get; set; }
+        public DbSet<SeasonAthlete> SeasonAthletes { get; set; }
+        public DbSet<Athlete> Athletes { get; set; }
+        public DbSet<DayEvent> DayEvents { get; set; }
 
     }
 }

@@ -8,6 +8,7 @@ namespace StravaLeaderboard.models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ClubID { get; set; }
+        public int? ZwiftID { get; set; }
         public string Name { get; set; }
         public string Location { get; set; }
         public string Country { get; set; }
@@ -15,10 +16,13 @@ namespace StravaLeaderboard.models
 
     public class Season
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int SeasonID { get; set; }
         public DateTime Start_date { get; set; }
         public DateTime End_date { get; set; }
         public string Keyword { get; set; }
+
+        //foreign keys
         public int ClubID { get; set; }
 
         //reference members
