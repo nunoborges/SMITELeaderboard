@@ -14,6 +14,8 @@ namespace StravaLeaderboard.Data
         public DbSet<SeasonAthlete> SeasonAthletes { get; set; }
         public DbSet<Athlete> Athletes { get; set; }
         public DbSet<DayEvent> DayEvents { get; set; }
+        public DbSet<EventSegment> EventSegments { get; set; }
+        public DbSet<Segment> Segments { get; set; }
 
     }
 }
