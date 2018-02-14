@@ -10,13 +10,14 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using StravaLeaderboard.Data;
 using StravaLeaderboard.models;
+using Microsoft.EntityFrameworkCore;
 
 namespace StravaLeaderboard.Pages
 {
-    public partial class AdminModel : PageModel
+    public class AdminModel : PageModel
     {
         
-        private readonly DataContext _db;
+        private DataContext _db;
         public APITokens _apitokens { get; set; }
         public AdminModel(DataContext db, IOptions<APITokens> apitokens)
         {
@@ -24,46 +25,35 @@ namespace StravaLeaderboard.Pages
             _apitokens = apitokens.Value;
         }
 
-        [TempData]
+        //[TempData]
         //public string Message { get; set; }
 
-        [BindProperty]
-        public Club club { get; set; }
+        //[BindProperty]
+        public List<Club> ClubsSelection { get; set; }
+        public async Task OnGetAsync()
+        {
+            ClubsSelection = await _db.Clubs.ToListAsync();
+        }
 
         // London = 14063868,13619366 (tim's tongue twister)
         // Watopia = 16730849,16730862,16730897,16730888,16936841,16730909
         // watopia SMITE Feb 10 = 13855855,14485439,13521759,14250115
-        public static int[] segments = new int[] { 14063868, 13619366 };
+        //public static int[] segments = new int[] { 14063868, 13619366 };
         public List<JSONActivity> SegmentActivities = new List<JSONActivity>();
         public List<Segment> SegmentLeaderboard = new List<Segment>();
 
-        public void OnGet()
-        {
 
-            for (int x = 0; x < segments.Length; x++)
-            {
-                SegmentActivities = FetchStravaData(segments[x]);
-                SegmentLeaderboard.Add(new Segment()
-                {
-                    Name = "SMITE: blah" + x.ToString(),
-                    SegmentID = 2342343,
-                    Type = "Green",
-                    World = "Watopia"
-                });
-            }
-        }
+        //public async Task<IActionResult> OnPostAsync()
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return Page();
+        //    }
 
-        public async Task<IActionResult> OnPostAsync()
-        {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
-            _db.Clubs.Add(club);
-            await _db.SaveChangesAsync();
-            return RedirectToPage("/Index");
-        }
+        //    _db.Clubs.Add(club);
+        //    await _db.SaveChangesAsync();
+        //    return RedirectToPage("/Index");
+        //}
 
         public List<JSONActivity> FetchStravaData(int segment)
         {

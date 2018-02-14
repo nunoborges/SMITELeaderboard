@@ -8,45 +8,4 @@
 )
 
 
-@*<table class="table">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => Model.Club[0].ClubID)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Club[0].Name)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Club[0].Location)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Club[0].Country)
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Club)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ClubID)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Location)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Country)
-                    </td>
-                    <td>
-                        <a asp-page="./Edit" asp-route-id="@item.ClubID">Edit</a> |
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>*@
 

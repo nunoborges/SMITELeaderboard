@@ -1,18 +1,24 @@
 ﻿@page
-@model ClubModel
+@using StravaLeaderboard.models
+@model AdminModel
 
-<html>
-<body>
-    <p>
-        Enter your name.
-    </p>
-    <div asp-validation-summary="All"></div>
-    <form method="POST">
-        <div>ClubID: <input asp-for="club.ClubID" /></div>
-        <div>Name: <input asp-for="club.Name" /></div>
-        <div>Location: <input asp-for="club.Location" /></div>
-        <div>Country: <input asp-for="club.Country" /></div>
-        <input type="submit" />
-    </form>
-</body>
-</html>
+
+@(Html.DevExtreme().DataGrid<Club>()
+            .DataSource(Model.ClubsSelection.ToList())
+)
+
+@*<html>
+    <body>
+        <p>
+            Enter your name.
+        </p>
+        <div asp-validation-summary="All"></div>
+        <form method="POST">
+            <div>ClubID: <input asp-for="ClubsSelection[0].ClubID" /></div>
+            <div>Name: <input asp-for="ClubsSelection[0].Name" /></div>
+            <div>Location: <input asp-for="ClubsSelection[0].Location" /></div>
+            <div>Country: <input asp-for="ClubsSelection[0].Country" /></div>
+            <input type="submit" />
+        </form>
+    </body>
+    </html>*@
