@@ -3,10 +3,45 @@
 @model AdminModel
 
 
-@(Html.DevExtreme().DataGrid<Club>()
-            .DataSource(Model.ClubsSelection.ToList())
+@(Html.DevExtreme().SelectBox()
+                .DataSource(Model.ClubsSelection.ToList())
+                .DisplayExpr("Name")
+                .ValueExpr("ClubID")
+                .Value(1)
+                .OnValueChanged(@<text>
+                    function(data) {
+                        var dataGrid = $("#seasonGrid").dxDataGrid("instance");
+                        dataGrid.filter(["ClubID", "=", data.value]);
+                    }
+                </text>)
 )
 
+@(Html.DevExtreme().DataGrid<Season>()
+                .ID("seasonGrid")
+                .DataSource(Model.Seasons.ToList())
+                .Selection(s => s.Mode(SelectionMode.Single))
+                .OnSelectionChanged("season_changed")
+)
+
+@(Html.DevExtreme().DataGrid<DayEvent>()
+                        .DataSource(Model.DayEvents.ToList())
+                        .Selection(s => s.Mode(SelectionMode.Single))
+                        .OnSelectionChanged("dayevent_changed")
+)
+
+@(Html.DevExtreme().DataGrid<Segment>()
+                        .DataSource(Model.Segments.ToList())
+)
+
+
+<script>
+    function club_changed(selectedItems) {
+        var data = selectedItems.selectedRowsData[0];
+        if (data) {
+            $(".employeeNotes").text(data.Name);
+        }
+    }
+</script>
 @*<html>
     <body>
         <p>

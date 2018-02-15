@@ -30,9 +30,15 @@ namespace StravaLeaderboard.Pages
 
         //[BindProperty]
         public List<Club> ClubsSelection { get; set; }
+        public List<Season> Seasons { get; set; }
+        public List<DayEvent> DayEvents { get; set; }
+        public List<Segment> Segments { get; set; }
         public async Task OnGetAsync()
         {
             ClubsSelection = await _db.Clubs.ToListAsync();
+            Seasons = await _db.Seasons.ToListAsync();
+            DayEvents = await _db.DayEvents.ToListAsync();
+            Segments = await _db.Segments.ToListAsync();
         }
 
         // London = 14063868,13619366 (tim's tongue twister)
