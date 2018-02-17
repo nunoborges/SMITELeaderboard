@@ -32,4 +32,16 @@ body {
     .carousel-caption {
         display: none;
     }
+
+/* devextreme sides for selectbox*/
+.right-side {
+    position: absolute;
+    right: 1px;
+    top: 6px;
+    }
+.left-side {
+    position: absolute;
+    left: 1px;
+    top: 6px;
+    }
 }

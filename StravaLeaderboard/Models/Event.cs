@@ -12,6 +12,8 @@ namespace StravaLeaderboard.models
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int DayEventID { get; set; }
         public DateTime Date { get; set; }
+
+        //foreign keys
         public int SeasonID { get; set; }
 
         //reference members

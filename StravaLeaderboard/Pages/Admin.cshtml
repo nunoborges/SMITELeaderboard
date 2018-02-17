@@ -2,46 +2,82 @@
 @using StravaLeaderboard.models
 @model AdminModel
 
+<div class="left-side">
+    @(Html.DevExtreme().SelectBox()
+                                        .DataSource(Model.ClubsSelection.ToList())
+                                        .DisplayExpr("Name")
+                                        .ValueExpr("ClubID")
+                                        .Value(1)
+                                        .OnValueChanged(@<text>
+                                        function(data) {
+                                        var dataGrid = $("#seasonGrid").dxDataGrid("instance");
+                                        dataGrid.filter(["ClubID", "=", data.value]);
+                                        }
+                                        </text>)
+    )
+</div>
 
-@(Html.DevExtreme().SelectBox()
-                .DataSource(Model.ClubsSelection.ToList())
-                .DisplayExpr("Name")
-                .ValueExpr("ClubID")
-                .Value(1)
-                .OnValueChanged(@<text>
-                    function(data) {
-                        var dataGrid = $("#seasonGrid").dxDataGrid("instance");
-                        dataGrid.filter(["ClubID", "=", data.value]);
-                    }
-                </text>)
-)
+<div id="data">
+    <p class="data1">?1?</p>
+    <p class="data2">?2?</p>
+</div>
 
 @(Html.DevExtreme().DataGrid<Season>()
-                .ID("seasonGrid")
-                .DataSource(Model.Seasons.ToList())
-                .Selection(s => s.Mode(SelectionMode.Single))
-                .OnSelectionChanged("season_changed")
+                        .ID("seasonGrid")
+                        .DataSource(Model.Seasons.ToList())
+                        //.KeyExpr("SeasonID")
+                        .Selection(s => s.Mode(SelectionMode.Single))
+                        .ColumnAutoWidth(true)
+                        .Columns(columns =>
+                        {
+                            columns.Add()
+                                .DataField("SeasonID")
+                                .Caption("Season ID");
+                            columns.Add()
+                                .DataField("Start_date")
+                                .Caption("Start Date")
+                                .DataType(GridColumnDataType.Date);
+                            columns.Add()
+                                .DataField("End_date")
+                                .Caption("End Date")
+                                .DataType(GridColumnDataType.Date);
+                            columns.Add()
+                                .DataField("Keyword");
+                        })
+                        .OnSelectionChanged(@<text>
+                        function(data) {
+                        var d = data.selectedRowsData[0];
+                        $(".data1").text(d.SeasonID + "bla1");
+                        $(".data2").text(d.Keyword + "bla1");
+                        
+                            var dataGrid = $("#dayeventGrid").dxDataGrid("instance");
+                                dataGrid.filter(["SeasonID", "=", d.SeasonID]);
+
+                        }
+                        </text>)
 )
 
+
+
 @(Html.DevExtreme().DataGrid<DayEvent>()
+                        .ID("dayeventGrid")
                         .DataSource(Model.DayEvents.ToList())
                         .Selection(s => s.Mode(SelectionMode.Single))
-                        .OnSelectionChanged("dayevent_changed")
+                        .OnSelectionChanged(@<text>
+                        function(data) {
+                        var dataGrid = $("#segmentGrid").dxDataGrid("instance");
+                        dataGrid.filter(["DayEventID", "=", data.value]);
+                        }
+                        </text>)
 )
 
 @(Html.DevExtreme().DataGrid<Segment>()
                         .DataSource(Model.Segments.ToList())
+                        .ID("segmentGrid")
 )
 
 
-<script>
-    function club_changed(selectedItems) {
-        var data = selectedItems.selectedRowsData[0];
-        if (data) {
-            $(".employeeNotes").text(data.Name);
-        }
-    }
-</script>
+
 @*<html>
     <body>
         <p>
