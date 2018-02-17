@@ -32,12 +32,14 @@ namespace StravaLeaderboard.Pages
         public List<Club> ClubsSelection { get; set; }
         public List<Season> Seasons { get; set; }
         public List<DayEvent> DayEvents { get; set; }
+        public List<EventSegment> EventSegments { get; set; }
         public List<Segment> Segments { get; set; }
         public async Task OnGetAsync()
         {
             ClubsSelection = await _db.Clubs.ToListAsync();
             Seasons = await _db.Seasons.ToListAsync();
             DayEvents = await _db.DayEvents.ToListAsync();
+            EventSegments = await _db.EventSegments.ToListAsync();
             Segments = await _db.Segments.ToListAsync();
         }
 

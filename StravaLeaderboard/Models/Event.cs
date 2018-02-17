@@ -31,8 +31,8 @@ namespace StravaLeaderboard.models
         public int DayEventID { get; set; }
         public int SegmentID { get; set; }
 
-        //reference members
-        public DayEvent Event { get; set; }
-        public Segment Segment { get; set; }
+        //reference members (apparently i don't need this)
+        //public DayEvent DayEvent { get; set; }
+        //public Segment Segment { get; set; }
     }
 }
