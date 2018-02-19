@@ -28,13 +28,16 @@ namespace StravaLeaderboard.Pages
         //[TempData]
         //public string Message { get; set; }
 
-        //[BindProperty]
+        [BindProperty]
+        public int DayEventID { get; set; }
+
         public List<Club> ClubsSelection { get; set; }
         public List<Season> Seasons { get; set; }
         public List<DayEvent> DayEvents { get; set; }
         public List<EventSegment> EventSegments { get; set; }
         public List<Segment> Segments { get; set; }
-        public async Task OnGetAsync()
+
+        public async Task OnGetAsync(int? id)
         {
             ClubsSelection = await _db.Clubs.ToListAsync();
             Seasons = await _db.Seasons.ToListAsync();
@@ -51,17 +54,22 @@ namespace StravaLeaderboard.Pages
         public List<Segment> SegmentLeaderboard = new List<Segment>();
 
 
-        //public async Task<IActionResult> OnPostAsync()
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return Page();
-        //    }
+        public async Task<IActionResult> OnPostAsync(int dayeventID)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
 
-        //    _db.Clubs.Add(club);
-        //    await _db.SaveChangesAsync();
-        //    return RedirectToPage("/Index");
-        //}
+            Segments = await _db.Segments.ToListAsync(); 
+
+            //for (int x = 0; x < segmentList.Length; x++)
+            //{
+            //    SegmentActivities = FetchStravaData(segmentList[x]);
+            //}
+            return RedirectToPage("/Leaderboard");
+        }
+
 
         public List<JSONActivity> FetchStravaData(int segment)
         {

@@ -1,19 +1,19 @@
-﻿@page
+﻿@page "{DayEventID?}"
 @using StravaLeaderboard.models
 @model AdminModel
 
 <div class="left-side">
     @(Html.DevExtreme().SelectBox()
-        .DataSource(Model.ClubsSelection.ToList())
-        .DisplayExpr("Name")
-        .ValueExpr("ClubID")
-        .Value(1)
-        .OnValueChanged(@<text>
-        function(data) {
-            var dataGrid = $("#seasonGrid").dxDataGrid("instance");
-            dataGrid.filter(["ClubID", "=", data.value]);
-        }
-        </text>)
+                .DataSource(Model.ClubsSelection.ToList())
+                .DisplayExpr("Name")
+                .ValueExpr("ClubID")
+                .Value(1)
+                .OnValueChanged(@<text>
+                function(data) {
+                var dataGrid = $("#seasonGrid").dxDataGrid("instance");
+                dataGrid.filter(["ClubID", "=", data.value]);
+                }
+                </text>)
     )
 </div>
 
@@ -41,9 +41,9 @@
         })
         .OnSelectionChanged(@<text>
         function(data) {
-            var d = data.selectedRowsData[0];
-            var dataGrid = $("#dayeventGrid").dxDataGrid("instance");
-            dataGrid.filter(["SeasonID", "=", d.SeasonID]);
+        var d = data.selectedRowsData[0];
+        var dataGrid = $("#dayeventGrid").dxDataGrid("instance");
+        dataGrid.filter(["SeasonID", "=", d.SeasonID]);
         }
         </text>)
 )
@@ -51,19 +51,65 @@
 
 
 @(Html.DevExtreme().DataGrid<DayEvent>()
-        .ID("dayeventGrid")
-        .DataSource(Model.DayEvents.ToList())
-        .Selection(s => s.Mode(SelectionMode.Single))
-        .OnSelectionChanged(@<text>
-        function(data) {
+            .ID("dayeventGrid")
+            .DataSource(Model.DayEvents.ToList())
+            .Selection(s => s.Mode(SelectionMode.Single))
+            .Columns(columns =>
+            {
+                columns.Add()
+                    .DataField("SeasonID")
+                    .Caption("Season ID");
+                columns.Add()
+                    .DataField("DayEventID")
+                    .Caption("DayEvent ID");
+                columns.Add()
+                    .DataField("Date")
+                    .Caption("Date")
+                    .DataType(GridColumnDataType.Date);
+            })
+            .OnSelectionChanged(@<text>
+            function(data) {
             var d = data.selectedRowsData[0];
             var dataGrid = $("#eventsegmentGrid").dxDataGrid("instance");
             dataGrid.filter(["DayEventID", "=", d.DayEventID]);
-        }
-        </text>)
+            var button = $("#getStravaDataBtn").dxButton("instance");
+            button.option("visible", true);
+            }
+            </text>)
 )
 
 @(Html.DevExtreme().DataGrid<EventSegment>()
-        .DataSource(Model.EventSegments.ToList())
-        .ID("eventsegmentGrid")
+                .DataSource(Model.EventSegments.ToList())
+                .ID("eventsegmentGrid")
+                .Editing(editing =>
+                {
+                    editing.Mode(GridEditMode.Row);
+                    editing.AllowUpdating(true);
+                    editing.AllowAdding(true);
+                })
+                .Columns(columns =>
+                {
+                    columns.Add()
+                        .DataField("DayEventID")
+                        .Caption("DayEvent ID");
+                    columns.Add()
+                        .DataField("SegmentID")
+                        .Caption("Segment ID");
+                })
 )
+
+
+@using (Html.BeginForm(new { id = new JS("data.ID") }))
+{
+    @(Html.DevExtreme().Button()
+                                .ID("getStravaDataBtn")
+                                .Text("Get Data")
+                                .Type(ButtonType.Success)
+                                .UseSubmitBehavior(true)
+                                .Visible(false)
+    )
+}
+
+@*  DO THIS!
+    https://js.devexpress.com/Documentation/Guide/ASP.NET_MVC_Controls/Client-Side_Data_Validation/Validate_and_Submit_an_HTML_Form/
+*@
