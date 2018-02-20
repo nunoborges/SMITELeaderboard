@@ -54,7 +54,7 @@ namespace StravaLeaderboard.Pages
         public List<Segment> SegmentLeaderboard = new List<Segment>();
 
 
-        public async Task<IActionResult> OnPostAsync(int dayeventID)
+        public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
@@ -69,7 +69,6 @@ namespace StravaLeaderboard.Pages
             //}
             return RedirectToPage("/Leaderboard");
         }
-
 
         public List<JSONActivity> FetchStravaData(int segment)
         {
