@@ -10,6 +10,8 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using StravaLeaderboard.Data;
 using StravaLeaderboard.models;
+using StravaLeaderboard.API;
+using StravaLeaderboard.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace StravaLeaderboard.Pages
@@ -31,6 +33,9 @@ namespace StravaLeaderboard.Pages
         [BindProperty]
         public int DayEventID { get; set; }
 
+        [BindProperty]
+        public int UserClubID { get; set; }
+
         public List<Club> ClubsSelection { get; set; }
         public List<Season> Seasons { get; set; }
         public List<DayEvent> DayEvents { get; set; }
@@ -46,13 +51,8 @@ namespace StravaLeaderboard.Pages
             Segments = await _db.Segments.ToListAsync();
         }
 
-        // London = 14063868,13619366 (tim's tongue twister)
-        // Watopia = 16730849,16730862,16730897,16730888,16936841,16730909
-        // watopia SMITE Feb 10 = 13855855,14485439,13521759,14250115
-        //public static int[] segments = new int[] { 14063868, 13619366 };
         public List<JSONActivity> SegmentActivities = new List<JSONActivity>();
         public List<Segment> SegmentLeaderboard = new List<Segment>();
-
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -61,39 +61,43 @@ namespace StravaLeaderboard.Pages
                 return Page();
             }
 
-            Segments = await _db.Segments.ToListAsync(); 
+            EventSegments = await _db.EventSegments
+                .Where(i => i.DayEventID == DayEventID)
+                .AsNoTracking()
+                .ToListAsync();
 
-            //for (int x = 0; x < segmentList.Length; x++)
-            //{
-            //    SegmentActivities = FetchStravaData(segmentList[x]);
-            //}
+            //get club activities - limited to top 200
+            List<JSONActivity> Activities = await GetStravaActivities();
+            //parse out activites with <Club.Keyword> in title
+            Activities = ParseActivities(Activities);
+
+            for (int x = 0; x < EventSegments.Count; x++)
+            {
+                SegmentActivities = GetStravaSegmentData(EventSegments[x].SegmentID);
+            }
+            //TODO: only go to /leaderboard if there are no errors
+            //TODO: asynchronously add athletes if successful here
             return RedirectToPage("/Leaderboard");
         }
 
-        public List<JSONActivity> FetchStravaData(int segment)
+        public List<JSONActivity> GetStravaSegmentData(int segment)
         {
-            //get club activities - limited to top 200
-            //TODO: don't need to get Activities multiple times
-            List<JSONActivity> Activities = GetActivities();
+            //TODO: put this all in a try-catch block
 
-            //parse out activites with "SMITE" in title
-            //TODO: don't need to do this multiple times
-            Activities = ParseActivities(Activities);
+            ////TODO: save activities in SQLite
+            ////SaveActivities(Activities);
 
-            //TODO: save activities in SQLite
-            //SaveActivities(Activities);
+            ////get Segment Leaderboard for list of segments
+            ////TODO: Add segment to SQLite if does not exist
+            //RAWResults SegmentEntries = GetSegmentEntries(segment);
 
-            //get Segment Leaderboard for list of segments
-            //TODO: Add segment to SQLite if does not exist
-            RAWResults SegmentEntries = GetSegmentEntries(segment);
+            ////parse out the segment efforts where a user name match 
+            ////exists between the effort and the activity above
+            //Activities = ParseEntries(SegmentEntries, Activities);
 
-            //parse out the segment efforts where a user name match 
-            //exists between the effort and the activity above
-            Activities = ParseEntries(SegmentEntries, Activities);
-
-            //write leaderboard to Leaderboard.cshtml in ranked order
-            //TODO: Strava is not returning the json efforts in order of elapsed_time - launched a ticket
-            return WriteLeaderboard(Activities, segment);
+            ////write leaderboard to Leaderboard.cshtml in ranked order
+            ////TODO: Strava is not returning the json efforts in order of elapsed_time - launched a ticket
+            return null;// WriteLeaderboard(Activities, segment);
 
         }
 
@@ -106,38 +110,20 @@ namespace StravaLeaderboard.Pages
                     select activity).ToList();
         }
 
-        public List<JSONActivity> GetActivities()
+        public async Task<List<JSONActivity>> GetStravaActivities()
         {
-            Uri uri = new Uri("https://www.strava.com/api/v3/clubs/238810/activities?access_token=" +
-            _apitokens.Access_Token +
-            "&per_page=200");
+            var stravaClubID = _db.Clubs.Where(i => i.ClubID == UserClubID).Select(s => s.StravaClubID).First();
+            string getUrl = string.Format("{0}/{1}/activities?per_page={2}&access_token={3}", Endpoints.Club, stravaClubID,200, _apitokens.Access_Token);
+            string json = await Strava.Http.WebRequest.SendGetAsync(new Uri(getUrl));
 
-            HttpWebRequest httpRequest = (HttpWebRequest)System.Net.WebRequest.Create(uri);
-            httpRequest.Method = "GET";
-
-            String response;
-            using (HttpWebResponse httpResponse = (HttpWebResponse)httpRequest.GetResponse())
-            {
-                Stream responseStream = httpResponse.GetResponseStream();
-                StreamReader reader = new StreamReader(responseStream);
-                response = reader.ReadToEnd();
-
-                // Close both streams.
-                reader.Close();
-                responseStream.Close();
-
-                //return response;
-            }
-
-            List<JSONActivity> deserializedObject = JsonConvert.DeserializeObject<List<JSONActivity>>(response);
-
-            return deserializedObject;
+            return Unmarshaller<List<JSONActivity>>.Unmarshal(json);
         }
 
         public List<JSONActivity> ParseActivities(List<JSONActivity> activities)
         {
+            //TODO: get keyword from model
             List<JSONActivity> ParsedActivities = (from activity in activities
-                                                   where activity.Name.ToLower().Contains("london")
+                                                   where activity.Name.ToLower().Contains("watopia")
                                                    select activity).ToList();
 
             return ParsedActivities;

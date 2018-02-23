@@ -8,7 +8,7 @@ namespace StravaLeaderboard.models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ClubID { get; set; }
-        public int? ZwiftID { get; set; }
+        public int? StravaClubID { get; set; }
         public string Name { get; set; }
         public string Location { get; set; }
         public string Country { get; set; }

@@ -98,7 +98,7 @@ namespace StravaLeaderboard.models
 
     public class JSONSegment
     {
-
+        //TODO: implement when you search for new segments from the Strava API
     }
 
 }

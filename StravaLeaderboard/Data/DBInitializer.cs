@@ -18,7 +18,7 @@ namespace StravaLeaderboard.Data
 
             var clubs = new Club[]
             {
-                new Club{ClubID=1,ZwiftID=238810,Name="SMITE",Location="Volcano", Country="Watopia"},
+                new Club{ClubID=1,StravaClubID=238810,Name="SMITE",Location="Volcano", Country="Watopia"},
                 new Club{ClubID=2,Name="SMITE-London",Location="Radio Tower", Country="Watopia"},
                 new Club{ClubID=3,Name="SMITE-Watopia",Location="Hank's House", Country="Watopia"}
             };
