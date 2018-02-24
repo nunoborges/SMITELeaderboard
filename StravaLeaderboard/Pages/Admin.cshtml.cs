@@ -32,9 +32,10 @@ namespace StravaLeaderboard.Pages
 
         [BindProperty]
         public int DayEventID { get; set; }
-
         [BindProperty]
         public int UserClubID { get; set; }
+        [BindProperty]
+        public string UserKeyword { get; set; }
 
         public List<Club> ClubsSelection { get; set; }
         public List<Season> Seasons { get; set; }
@@ -51,11 +52,13 @@ namespace StravaLeaderboard.Pages
             Segments = await _db.Segments.ToListAsync();
         }
 
-        public List<JSONActivity> SegmentActivities = new List<JSONActivity>();
-        public List<Segment> SegmentLeaderboard = new List<Segment>();
+        //SegmentActivities is a collection of Activities for each Segment on that DayEvent
+        //public List<JSONActivity> SegmentActivities = new List<JSONActivity>();
+        //public List<Segment> SegmentLeaderboard = new List<Segment>();
 
         public async Task<IActionResult> OnPostAsync()
         {
+            //TODO: model should recognize if this button was clicked already
             if (!ModelState.IsValid)
             {
                 return Page();
@@ -67,118 +70,97 @@ namespace StravaLeaderboard.Pages
                 .ToListAsync();
 
             //get club activities - limited to top 200
-            List<JSONActivity> Activities = await GetStravaActivities();
+            List<JSONActivity> JSONActivities = await GetStravaActivities();
             //parse out activites with <Club.Keyword> in title
-            Activities = ParseActivities(Activities);
+            JSONActivities = ParseActivities(JSONActivities);
 
             for (int x = 0; x < EventSegments.Count; x++)
             {
-                SegmentActivities = GetStravaSegmentData(EventSegments[x].SegmentID);
+                //get Segment Leaderboard for list of segments
+                RAWResults SegmentEntries = await GetSegmentEntries(EventSegments[x].SegmentID);
+                //add efforts to Activity where usernames match between the segment and activity
+                List<JSONActivity> Activities = AddSegmentEntries(SegmentEntries, JSONActivities);
+                //save activities and athletes if new (to database)
+                SaveActivities(Activities);
             }
+
             //TODO: only go to /leaderboard if there are no errors
-            //TODO: asynchronously add athletes if successful here
             return RedirectToPage("/Leaderboard");
-        }
-
-        public List<JSONActivity> GetStravaSegmentData(int segment)
-        {
-            //TODO: put this all in a try-catch block
-
-            ////TODO: save activities in SQLite
-            ////SaveActivities(Activities);
-
-            ////get Segment Leaderboard for list of segments
-            ////TODO: Add segment to SQLite if does not exist
-            //RAWResults SegmentEntries = GetSegmentEntries(segment);
-
-            ////parse out the segment efforts where a user name match 
-            ////exists between the effort and the activity above
-            //Activities = ParseEntries(SegmentEntries, Activities);
-
-            ////write leaderboard to Leaderboard.cshtml in ranked order
-            ////TODO: Strava is not returning the json efforts in order of elapsed_time - launched a ticket
-            return null;// WriteLeaderboard(Activities, segment);
-
-        }
-
-        private List<JSONActivity> WriteLeaderboard(List<JSONActivity> activities, int segment)
-        {
-
-            return (from activity in activities
-                    where activity.Athlete.SegmentResults != null
-                    orderby activity.Athlete.SegmentResults[0].Rank
-                    select activity).ToList();
         }
 
         public async Task<List<JSONActivity>> GetStravaActivities()
         {
-            var stravaClubID = _db.Clubs.Where(i => i.ClubID == UserClubID).Select(s => s.StravaClubID).First();
-            string getUrl = string.Format("{0}/{1}/activities?per_page={2}&access_token={3}", Endpoints.Club, stravaClubID,200, _apitokens.Access_Token);
+            int? stravaClubID = GetStravaClubID();
+            string getUrl = string.Format("{0}/{1}/activities?per_page={2}&access_token={3}", 
+                Endpoints.Club, 
+                stravaClubID, 
+                200, 
+                _apitokens.Access_Token
+                );
             string json = await Strava.Http.WebRequest.SendGetAsync(new Uri(getUrl));
 
             return Unmarshaller<List<JSONActivity>>.Unmarshal(json);
         }
 
+        private int? GetStravaClubID()
+        {
+            return _db.Clubs.Where(i => i.ClubID == UserClubID).Select(s => s.StravaClubID).First();
+        }
+
         public List<JSONActivity> ParseActivities(List<JSONActivity> activities)
         {
-            //TODO: get keyword from model
+            //string keyword = _db.Seasons.Where(i => i.SeasonID == UserKeyword).Select(s => s.Keyword).First();
             List<JSONActivity> ParsedActivities = (from activity in activities
-                                                   where activity.Name.ToLower().Contains("watopia")
+                                                   where activity.Name.ToLower().Contains(UserKeyword)
                                                    select activity).ToList();
 
             return ParsedActivities;
         }
 
-        //public async void SaveActivities(List<Activity> activities)
-        //{
-
-        //}
-
-        private RAWResults GetSegmentEntries(int Segment)
+        public async void SaveActivities(List<JSONActivity> activities)
         {
-            Uri uri = new Uri("https://www.strava.com/api/v3/segments/" + Segment.ToString() + "/leaderboard?access_token=" +
-                _apitokens.Access_Token + "&per_page=200&context_entries=0&club_id=238810&date_range=this_week");
-            HttpWebRequest httpRequest = (HttpWebRequest)System.Net.WebRequest.Create(uri);
-            httpRequest.Method = "GET";
-
-            String response;
-            using (HttpWebResponse httpResponse = (HttpWebResponse)httpRequest.GetResponse())
-            {
-                Stream responseStream = httpResponse.GetResponseStream();
-                StreamReader reader = new System.IO.StreamReader(responseStream);
-                response = reader.ReadToEnd();
-                // Close both streams.
-                reader.Close();
-                responseStream.Close();
-            }
-
-            RAWResults deserializedObject = JsonConvert.DeserializeObject<RAWResults>(response);
-
-            return deserializedObject;
+            //Parse OUT the activities that didn't match with the segment results
+            //return (from activity in activities
+            //        where activity.Athlete.SegmentResults != null
+            //        orderby activity.Athlete.SegmentResults.Rank
+            //        select activity).ToList();
         }
 
-        private List<JSONActivity> ParseEntries(RAWResults segmentEntries, List<JSONActivity> activities)
+        private async Task<RAWResults> GetSegmentEntries(int Segment)
+        {
+            int? stravaClubID = GetStravaClubID();
+            string getUrl = string.Format("{0}/{1}/leaderboard?club_id={2}&per_page={3}&context_entries={4}&date_range={5}&access_token={6}",
+                Endpoints.Leaderboard,
+                Segment.ToString(),
+                stravaClubID,
+                200,
+                0,
+                "today",
+                _apitokens.Access_Token
+                );
+            string json = await Strava.Http.WebRequest.SendGetAsync(new Uri(getUrl));
+
+            return Unmarshaller<RAWResults>.Unmarshal(json);
+        }
+
+        private List<JSONActivity> AddSegmentEntries(RAWResults segmentEntries, List<JSONActivity> activities)
         {
             //int points = 10;
             int rankCounter = 1;
 
             foreach (var segmentEntry in segmentEntries.Entries)
             {
-
                 foreach (JSONActivity activity in activities)
                 {
-
                     if (segmentEntry.Athlete_name.ToLower().Equals(activity.Athlete.FirstName.ToLower() + " " + activity.Athlete.LastName.Substring(0, 1).ToLower() + "."))
                     {
-                        activity.Athlete.SegmentResults = new List<JSONResults>
-                            {
-                                new JSONResults() {
-                                    Rank = rankCounter,
-                                    Start_date = segmentEntry.Start_date,
-                                    Elapsed_time = segmentEntry.Elapsed_time
-                                    //Points = points
-                                }
-                            };
+                        activity.Athlete.SegmentResults = new JSONResults()
+                        {
+                            Rank = rankCounter,
+                            Start_date = segmentEntry.Start_date,
+                            Elapsed_time = segmentEntry.Elapsed_time
+                            //Points = points
+                        };
 
                         //activity.Athlete.TotalPoints = activity.Athlete.TotalPoints + points;
                         ////TODO: if polka points then add

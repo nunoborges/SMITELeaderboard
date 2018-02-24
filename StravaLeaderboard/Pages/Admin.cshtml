@@ -4,103 +4,102 @@
 
 <div class="left-side">
     @(Html.DevExtreme().SelectBox()
-            .DataSource(Model.ClubsSelection.ToList())
-            .DisplayExpr("Name")
-            .ValueExpr("ClubID")
-            .Value(1)
-            .OnValueChanged(@<text>
-            function(data) {
-            var dataGrid = $("#seasonGrid").dxDataGrid("instance");
-            dataGrid.filter(["ClubID", "=", data.value]);
-            var txtbox = $("#clubIDTxt").dxTextBox("instance");
-            txtbox.option("value", data.value);
-            }
-            </text>)
+                .DataSource(Model.ClubsSelection.ToList())
+                .DisplayExpr("Name")
+                .ValueExpr("ClubID")
+                .Value(1)
+                .OnValueChanged(@<text>
+                function(data) {
+                var dataGrid = $("#seasonGrid").dxDataGrid("instance");
+                dataGrid.filter(["ClubID", "=", data.value]);
+                var txtbox = $("#clubIDTxt").dxTextBox("instance");
+                txtbox.option("value", data.value);
+                }
+                </text>)
     )
 </div>
 
 @(Html.DevExtreme().DataGrid<Season>()
-            .ID("seasonGrid")
-            .DataSource(Model.Seasons.ToList())
-            //.KeyExpr("SeasonID")
-            .Selection(s => s.Mode(SelectionMode.Single))
-            .ColumnAutoWidth(true)
-            .Columns(columns =>
-            {
-                columns.Add()
-                    .DataField("SeasonID")
-                    .Caption("Season ID");
-                columns.Add()
-                    .DataField("Start_date")
-                    .Caption("Start Date")
-                    .DataType(GridColumnDataType.Date);
-                columns.Add()
-                    .DataField("End_date")
-                    .Caption("End Date")
-                    .DataType(GridColumnDataType.Date);
-                columns.Add()
-                    .DataField("Keyword");
-            })
-            .OnSelectionChanged(@<text>
-            function(data) {
-            var d = data.selectedRowsData[0];
-            var dataGrid = $("#dayeventGrid").dxDataGrid("instance");
-            dataGrid.filter(["SeasonID", "=", d.SeasonID]);
-            }
-            </text>)
+                .ID("seasonGrid")
+                .DataSource(Model.Seasons.ToList())
+                //.KeyExpr("SeasonID")
+                .Selection(s => s.Mode(SelectionMode.Single))
+                .ColumnAutoWidth(true)
+                .Columns(columns =>
+                {
+                    columns.Add()
+                        .DataField("SeasonID")
+                        .Caption("Season ID");
+                    columns.Add()
+                        .DataField("Start_date")
+                        .Caption("Start Date")
+                        .DataType(GridColumnDataType.Date);
+                    columns.Add()
+                        .DataField("End_date")
+                        .Caption("End Date")
+                        .DataType(GridColumnDataType.Date);
+                    columns.Add()
+                        .DataField("Keyword");
+                })
+                .OnSelectionChanged(@<text>
+                function(data) {
+                var d = data.selectedRowsData[0];
+                var dataGrid = $("#dayeventGrid").dxDataGrid("instance");
+                dataGrid.filter(["SeasonID", "=", d.SeasonID]);
+                var txtbox = $("#keywordTxt").dxTextBox("instance");
+                txtbox.option("value", d.Keyword);
+                }
+                </text>)
 )
 
-
-
 @(Html.DevExtreme().DataGrid<DayEvent>()
-            .ID("dayeventGrid")
-            .DataSource(Model.DayEvents.ToList())
-            .Selection(s => s.Mode(SelectionMode.Single))
-            .Columns(columns =>
-            {
-                columns.Add()
-                    .DataField("SeasonID")
-                    .Caption("Season ID");
-                columns.Add()
-                    .DataField("DayEventID")
-                    .Caption("DayEvent ID");
-                columns.Add()
-                    .DataField("Date")
-                    .Caption("Date")
-                    .DataType(GridColumnDataType.Date);
-            })
-            .OnSelectionChanged(@<text>
-            function(data) {
-            var d = data.selectedRowsData[0];
-            var dataGrid = $("#eventsegmentGrid").dxDataGrid("instance");
-            dataGrid.filter(["DayEventID", "=", d.DayEventID]);
-            var button = $("#getStravaDataBtn").dxButton("instance");
-            button.option("visible", true);
-            var txtbox = $("#dayEventIDTxt").dxTextBox("instance");
-            txtbox.option("value", d.DayEventID);
-            }
-            </text>)
+                .ID("dayeventGrid")
+                .DataSource(Model.DayEvents.ToList())
+                .Selection(s => s.Mode(SelectionMode.Single))
+                .Columns(columns =>
+                {
+                    columns.Add()
+                        .DataField("SeasonID")
+                        .Caption("Season ID");
+                    columns.Add()
+                        .DataField("DayEventID")
+                        .Caption("DayEvent ID");
+                    columns.Add()
+                        .DataField("Date")
+                        .Caption("Date")
+                        .DataType(GridColumnDataType.Date);
+                })
+                .OnSelectionChanged(@<text>
+                function(data) {
+                var d = data.selectedRowsData[0];
+                var dataGrid = $("#eventsegmentGrid").dxDataGrid("instance");
+                dataGrid.filter(["DayEventID", "=", d.DayEventID]);
+                var button = $("#getStravaDataBtn").dxButton("instance");
+                button.option("visible", true);
+                var txtbox = $("#dayEventIDTxt").dxTextBox("instance");
+                txtbox.option("value", d.DayEventID);
+                }
+                </text>)
 )
 
 @(Html.DevExtreme().DataGrid<EventSegment>()
-            .DataSource(Model.EventSegments.ToList())
-            .ID("eventsegmentGrid")
-            .Editing(editing =>
-            {
-                editing.Mode(GridEditMode.Row);
-                editing.AllowUpdating(true);
-                editing.AllowAdding(true);
-            })
-            .Columns(columns =>
-            {
-                columns.Add()
-                    .DataField("DayEventID")
-                    .Caption("DayEvent ID");
-                columns.Add()
-                    .DataField("SegmentID")
-                    .Caption("Segment ID");
-            })
-
+                .DataSource(Model.EventSegments.ToList())
+                .ID("eventsegmentGrid")
+                .Editing(editing =>
+                {
+                    editing.Mode(GridEditMode.Row);
+                    editing.AllowUpdating(true);
+                    editing.AllowAdding(true);
+                })
+                .Columns(columns =>
+                {
+                    columns.Add()
+                        .DataField("DayEventID")
+                        .Caption("DayEvent ID");
+                    columns.Add()
+                        .DataField("SegmentID")
+                        .Caption("Segment ID");
+                })
 )
 
 @*populate a hidden field (DayEventID) in this form with the onselect action of the dayEvent grid
@@ -110,15 +109,18 @@
     // Creates a TextBox for the DayEventID model property
     @(Html.DevExtreme().TextBoxFor(model => model.DayEventID)
                 .ID("dayEventIDTxt")
-                .Visible(false)
+                .Visible(true)
     )
-
     // Creates a TextBox for the DayEventID model property
     @(Html.DevExtreme().TextBoxFor(model => model.UserClubID)
                 .ID("clubIDTxt")
-                .Visible(false)
+                .Visible(true)
     )
-
+    // Creates a TextBox for the DayEventID model property
+    @(Html.DevExtreme().TextBoxFor(model => model.UserKeyword)
+                .ID("keywordTxt")
+                .Visible(true)
+    )
     @(Html.DevExtreme().Button()
                 .ID("getStravaDataBtn")
                 .Text("Get Data")
