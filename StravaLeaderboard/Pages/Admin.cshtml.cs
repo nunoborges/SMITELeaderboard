@@ -123,7 +123,7 @@ namespace StravaLeaderboard.Pages
             //return (from activity in activities
             //        where activity.Athlete.SegmentResults != null
             //        orderby activity.Athlete.SegmentResults.Rank
-            //        select activity).ToList();
+            //        select activity).ToList(); 
         }
 
         private async Task<RAWResults> GetSegmentEntries(int Segment)
