@@ -109,22 +109,54 @@ namespace StravaLeaderboard.Pages
 
         public List<JSONActivity> ParseActivities(List<JSONActivity> activities)
         {
-            //string keyword = _db.Seasons.Where(i => i.SeasonID == UserKeyword).Select(s => s.Keyword).First();
             List<JSONActivity> ParsedActivities = (from activity in activities
                                                    where activity.Name.ToLower().Contains(UserKeyword)
                                                    select activity).ToList();
-
             return ParsedActivities;
         }
 
-        public async void SaveActivities(List<JSONActivity> activities)
+        public void SaveActivities(List<JSONActivity> jsonActivities)
         {
+           foreach (JSONActivity jsonActivity in jsonActivities)
+            {
+                //TODO: Have to add athlete and seasonathlete first
+                Activity activity = new Activity
+                {
+                    ActivityID = jsonActivity.Id,
+                    Name = jsonActivity.Name,
+                    Start_date = jsonActivity.Start_date,
+                    Achievement_count = jsonActivity.Achievement_count,
+                    Comment_count = jsonActivity.Comment_count,
+                    Kudos_count = jsonActivity.Kudos_count,
+                    Flagged = jsonActivity.Flagged,
+                    EventID = DayEventID,
+                    AthleteID = jsonActivity.Athlete.Id
+                };
+                _db.Activities.Add(activity);
+            }
+
+            _db.SaveChanges();
+
             //Parse OUT the activities that didn't match with the segment results
             //return (from activity in activities
             //        where activity.Athlete.SegmentResults != null
             //        orderby activity.Athlete.SegmentResults.Rank
             //        select activity).ToList();
 
+
+            //var allCourses = context.Courses;
+            //var instructorCourses = new HashSet<int>(
+            //    instructor.CourseAssignments.Select(c => c.CourseID));
+            //AssignedCourseDataList = new List<AssignedCourseData>();
+            //foreach (var course in allCourses)
+            //{
+            //    AssignedCourseDataList.Add(new AssignedCourseData
+            //    {
+            //        CourseID = course.CourseID,
+            //        Title = course.Title,
+            //        Assigned = instructorCourses.Contains(course.CourseID)
+            //    });
+            //}
         }
 
         private async Task<RAWResults> GetSegmentEntries(int Segment)

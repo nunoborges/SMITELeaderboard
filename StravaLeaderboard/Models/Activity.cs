@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,6 +9,7 @@ namespace StravaLeaderboard.models
     public class Activity
     {
         //activity members
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ActivityID { get; set; }
         public string Name { get; set; }
         public DateTime Start_date { get; set; }
@@ -23,8 +25,8 @@ namespace StravaLeaderboard.models
         //reference members
         public DayEvent Event { get; set; }
         public Athlete Athlete { get; set; }
+        public AthleteEventResult AthleteEventResult { get; set; }
         public List<ActivityResult> ActivityResults { get; set; }
-        public List<AthleteEventResult> AthleteEventResults { get; set; }
     }
 
     public class ActivityResult
