@@ -27,7 +27,6 @@ namespace StravaLeaderboard.models
         //reference members
         public DayEvent Event { get; set; }
         public Athlete Athlete { get; set; }
-        public AthleteEventResult AthleteEventResult { get; set; }
         public List<ActivityResult> ActivityResults { get; set; }
     }
 

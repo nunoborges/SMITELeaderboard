@@ -121,6 +121,8 @@ namespace StravaLeaderboard.Pages
         {
             jsonActivities = pruneActivitiesByEventAthlete(jsonActivities);
 
+            //TODO: if this code is rerun, we need to zero out the points to re-add them (consider taking this out altogether)
+
             foreach (JSONActivity jsonActivity in jsonActivities)
             {
                 if (!(_db.Athletes.Any(o => o.AthleteID == jsonActivity.Athlete.Id)))
@@ -134,6 +136,18 @@ namespace StravaLeaderboard.Pages
                 }
 
                 AddSegmentResults(jsonActivity, segmentID);
+                
+                Segment segment = _db.Segments.Single(o => o.SegmentID == segmentID);
+                Activity activity = _db.Activities.Single(a => a.ActivityID == jsonActivity.Id);
+                if (segment.Type == "polka")
+                {
+                    activity.Polka_points = activity.Polka_points + activity.ActivityResults[activity.ActivityResults.Count-1].Points;
+                }
+                else if (segment.Type == "green")
+                {
+                    activity.Green_points = activity.Green_points + activity.ActivityResults[activity.ActivityResults.Count - 1].Points;
+                }
+                _db.SaveChanges();
             }
         
             //var allCourses = context.Courses;
