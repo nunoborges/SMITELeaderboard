@@ -6,7 +6,6 @@ using System.Runtime.Serialization;
 namespace StravaLeaderboard.models
 {
 
-
     public class JSONActivity
     {
         //activity members
@@ -34,33 +33,6 @@ namespace StravaLeaderboard.models
 
         public JSONResults SegmentResults { get; set; }
 
-        ////Segment Results
-        //private int segmentCount = 0;
-        //public int SegmentCount
-        //{   get
-        //    { return segmentCount; }
-        //    set
-        //    { segmentCount = value; }
-        //}
-
-        //private int greenPoints = 0;
-        //public int GreenPoints
-        //{
-        //    get
-        //    { return greenPoints; }
-        //    set
-        //    { greenPoints = value; }
-        //}
-
-        //private int polkaPoints = 0;
-        //public int PolkaPoints
-        //{
-        //    get
-        //    { return polkaPoints; }
-        //    set
-        //    { polkaPoints = value; }
-        //}
-
         //private int totalPoints = 0;
         //public int TotalPoints
         //{
@@ -73,11 +45,19 @@ namespace StravaLeaderboard.models
 
     public class JSONResults
     {
-        public int SegmentID { get; set; }
         public int Rank { get; set; } = 0;
+        public int Strava_rank { get; set; }
         public int Elapsed_time { get; set; }
         public DateTime Start_date { get; set; }
 
+        private int points = 0;
+        public int Points
+        {
+            get
+            { return points; }
+            set
+            { points = value; }
+        }
     }
 
     public class RAWResults

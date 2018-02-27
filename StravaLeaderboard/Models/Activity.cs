@@ -17,6 +17,8 @@ namespace StravaLeaderboard.models
         public int Comment_count { get; set; }
         public int Kudos_count { get; set; }
         public Boolean Flagged { get; set; } = false;
+        public int Green_points { get; set; } = 0;
+        public int Polka_points { get; set; } = 0;
 
         //foreign keys
         public int EventID { get; set; }
@@ -34,6 +36,7 @@ namespace StravaLeaderboard.models
         //members
         public int ActivityResultID { get; set; }
         public int Rank { get; set; }
+        public int Strava_rank { get; set; }
         public int Elapsed_time { get; set; }
         public DateTime Start_date { get; set; }
         public int Points { get; set; } = 0;

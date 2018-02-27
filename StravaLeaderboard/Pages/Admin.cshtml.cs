@@ -83,7 +83,7 @@ namespace StravaLeaderboard.Pages
                 //add efforts to Activity where usernames match between the segment and activity
                 List<JSONActivity> Activities = AddSegmentEntries(SegmentEntries, JSONActivities);
                 //save activities and athletes if new (to database)
-                SaveActivities(Activities);
+                SaveActivities(Activities, EventSegments[x].SegmentID);
             }
 
             //TODO: only go to /leaderboard if there are no errors
@@ -117,7 +117,7 @@ namespace StravaLeaderboard.Pages
             return ParsedActivities;
         }
 
-        public void SaveActivities(List<JSONActivity> jsonActivities)
+        public void SaveActivities(List<JSONActivity> jsonActivities, int segmentID)
         {
             jsonActivities = pruneActivitiesByEventAthlete(jsonActivities);
 
@@ -127,13 +127,13 @@ namespace StravaLeaderboard.Pages
                 {
                     CreateNewAthlete(jsonActivity);
                 }
-                //TODO: Have to add athlete and seasonathlete first
-                //check if user exists
-                // if not, then add athlete and seasonathlete instance
+
                 if (!(_db.Activities.Any(o => o.ActivityID == jsonActivity.Id)))
                 {
                     CreateNewActivity(jsonActivity);
                 }
+
+                AddSegmentResults(jsonActivity, segmentID);
             }
         
             //var allCourses = context.Courses;
@@ -151,6 +151,23 @@ namespace StravaLeaderboard.Pages
             //}
         }
 
+        private void AddSegmentResults(JSONActivity jsonActivity, int segmentID)
+        {
+            ActivityResult activityResult = new ActivityResult
+            {
+                Rank = jsonActivity.Athlete.SegmentResults.Rank,
+                Elapsed_time = jsonActivity.Athlete.SegmentResults.Elapsed_time,
+                Start_date = jsonActivity.Athlete.SegmentResults.Start_date,
+                Strava_rank = jsonActivity.Athlete.SegmentResults.Strava_rank,
+                Points = jsonActivity.Athlete.SegmentResults.Points,
+                ActivityID = jsonActivity.Id,
+                SegmentID = segmentID
+            };
+            _db.ActivityResults.Add(activityResult);
+
+            _db.SaveChanges();
+        }
+
         private void CreateNewActivity(JSONActivity jsonActivity)
         {
             Activity activity = new Activity
@@ -166,6 +183,7 @@ namespace StravaLeaderboard.Pages
                 AthleteID = jsonActivity.Athlete.Id
             };
             _db.Activities.Add(activity);
+
             _db.SaveChanges();
         }
 
@@ -182,12 +200,14 @@ namespace StravaLeaderboard.Pages
                 UserName = jsonActivity.Athlete.UserName
             };
             _db.Athletes.Add(athlete);
+
             SeasonAthlete seasonAthlete = new SeasonAthlete
             {
                 AthleteID = jsonActivity.Athlete.Id,
                 SeasonID = Convert.ToInt32(SeasonID)
             };
             _db.SeasonAthletes.Add(seasonAthlete);
+
             _db.SaveChanges();
         }
 
@@ -219,30 +239,30 @@ namespace StravaLeaderboard.Pages
 
         private List<JSONActivity> AddSegmentEntries(RAWResults segmentEntries, List<JSONActivity> activities)
         {
-            //int points = 10;
+            //TODO: this logic only works when scope = 'today', because the matching algorithm on name is weak
+            // and error prone over time
+
+            // first place for segment gets 10 points
+            int points = 10;
             int rankCounter = 1;
 
             foreach (var segmentEntry in segmentEntries.Entries)
             {
                 foreach (JSONActivity activity in activities)
                 {
+                    //TODO: make the dates match as well - to make matching heuristic stronger
                     if (segmentEntry.Athlete_name.ToLower().Equals(activity.Athlete.FirstName.ToLower() + " " + activity.Athlete.LastName.Substring(0, 1).ToLower() + "."))
                     {
                         activity.Athlete.SegmentResults = new JSONResults()
                         {
                             Rank = rankCounter,
                             Start_date = segmentEntry.Start_date,
-                            Elapsed_time = segmentEntry.Elapsed_time
-                            //Points = points
+                            Elapsed_time = segmentEntry.Elapsed_time,
+                            Strava_rank = segmentEntry.Rank,
+                            Points = points
                         };
-
-                        //activity.Athlete.TotalPoints = activity.Athlete.TotalPoints + points;
-                        ////TODO: if polka points then add
-                        //activity.Athlete.PolkaPoints = activity.Athlete.PolkaPoints + points;
-                        ////TODO: if green points then add
-                        //activity.Athlete.GreenPoints = activity.Athlete.GreenPoints + points;
-                        //points = (points == 0) ? 0 : points - 2;
-                        //activity.Athlete.SegmentCount++;
+                        //each lower rank gets 2 less points
+                        points = (points == 0) ? 0 : points - 2;
                         rankCounter++;
                         break;
                     }

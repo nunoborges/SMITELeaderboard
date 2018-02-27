@@ -17,6 +17,7 @@ namespace StravaLeaderboard.Data
         public DbSet<EventSegment> EventSegments { get; set; }
         public DbSet<Segment> Segments { get; set; }
         public DbSet<Activity> Activities { get; set; }
+        public DbSet<ActivityResult> ActivityResults { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -28,7 +29,6 @@ namespace StravaLeaderboard.Data
             modelBuilder.Entity<EventSegment>().ToTable("EventSegments");
             modelBuilder.Entity<Segment>().ToTable("Segments");
             modelBuilder.Entity<Activity>().ToTable("Activities");
-            modelBuilder.Entity<AthleteEventResult>().ToTable("AthleteEventResults");
             modelBuilder.Entity<ActivityResult>().ToTable("ActivityResults");
         }
     }
