@@ -9,6 +9,7 @@ namespace StravaLeaderboard.models
     public class DayEvent
     {
         //activity members
+        //TODO: should eventually be auto-generated
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int DayEventID { get; set; }
         public DateTime Date { get; set; }

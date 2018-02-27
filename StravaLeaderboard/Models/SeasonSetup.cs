@@ -34,8 +34,9 @@ namespace StravaLeaderboard.models
     //JOIN Table between Season and Athlete
     public class SeasonAthlete
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int SeasonAthleteID { get; set; }
+
+        //foreign keys
         public int SeasonID { get; set; }
         public int AthleteID { get; set; }
 
