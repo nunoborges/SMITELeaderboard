@@ -20,6 +20,6 @@ namespace StravaLeaderboard.models
         public int Star_count { get; set; }
 
         //reference members
-        public ICollection<EventSegment> EventSegments { get; set; }
+        public ICollection<DayEventSegment> DayEventSegments { get; set; }
     }
 }

@@ -14,7 +14,7 @@ namespace StravaLeaderboard.Data
         public DbSet<SeasonAthlete> SeasonAthletes { get; set; }
         public DbSet<Athlete> Athletes { get; set; }
         public DbSet<DayEvent> DayEvents { get; set; }
-        public DbSet<EventSegment> EventSegments { get; set; }
+        public DbSet<DayEventSegment> DayEventSegments { get; set; }
         public DbSet<Segment> Segments { get; set; }
         public DbSet<Activity> Activities { get; set; }
         public DbSet<ActivityResult> ActivityResults { get; set; }
@@ -26,7 +26,7 @@ namespace StravaLeaderboard.Data
             modelBuilder.Entity<SeasonAthlete>().ToTable("SeasonAthletes");
             modelBuilder.Entity<Athlete>().ToTable("Athletes");
             modelBuilder.Entity<DayEvent>().ToTable("DayEvents");
-            modelBuilder.Entity<EventSegment>().ToTable("EventSegments");
+            modelBuilder.Entity<DayEventSegment>().ToTable("EventSegments");
             modelBuilder.Entity<Segment>().ToTable("Segments");
             modelBuilder.Entity<Activity>().ToTable("Activities");
             modelBuilder.Entity<ActivityResult>().ToTable("ActivityResults");

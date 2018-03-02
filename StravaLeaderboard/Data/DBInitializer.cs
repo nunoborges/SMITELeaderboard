@@ -102,31 +102,31 @@ namespace StravaLeaderboard.Data
 
 
             // Look for any eventsegments.
-            if (context.EventSegments.Any())
+            if (context.DayEventSegments.Any())
             {
                 return;   // DB has been seeded
             }
 
-            var eventsegments = new EventSegment[]
+            var eventsegments = new DayEventSegment[]
             {
-                new EventSegment{DayEventID=1,SegmentID=13855855},
-                new EventSegment{DayEventID=1,SegmentID=14485439},
-                new EventSegment{DayEventID=1,SegmentID=13521759},
-                new EventSegment{DayEventID=1,SegmentID=14250115},
-                new EventSegment{DayEventID=2,SegmentID=14063868},
-                new EventSegment{DayEventID=2,SegmentID=13619366},
-                new EventSegment{DayEventID=3,SegmentID=16730849},
-                new EventSegment{DayEventID=3,SegmentID=16730862},
-                new EventSegment{DayEventID=4,SegmentID=16730849},
-                new EventSegment{DayEventID=4,SegmentID=16730862},
-                new EventSegment{DayEventID=4,SegmentID=16730897},
-                new EventSegment{DayEventID=4,SegmentID=16730888},
-                new EventSegment{DayEventID=4,SegmentID=16936841}
+                new DayEventSegment{DayEventID=1,SegmentID=13855855},
+                new DayEventSegment{DayEventID=1,SegmentID=14485439},
+                new DayEventSegment{DayEventID=1,SegmentID=13521759},
+                new DayEventSegment{DayEventID=1,SegmentID=14250115},
+                new DayEventSegment{DayEventID=2,SegmentID=14063868},
+                new DayEventSegment{DayEventID=2,SegmentID=13619366},
+                new DayEventSegment{DayEventID=3,SegmentID=16730849},
+                new DayEventSegment{DayEventID=3,SegmentID=16730862},
+                new DayEventSegment{DayEventID=4,SegmentID=16730849},
+                new DayEventSegment{DayEventID=4,SegmentID=16730862},
+                new DayEventSegment{DayEventID=4,SegmentID=16730897},
+                new DayEventSegment{DayEventID=4,SegmentID=16730888},
+                new DayEventSegment{DayEventID=4,SegmentID=16936841}
             };
 
-            foreach (EventSegment eventsegment in eventsegments)
+            foreach (DayEventSegment eventsegment in eventsegments)
             {
-                context.EventSegments.Add(eventsegment);
+                context.DayEventSegments.Add(eventsegment);
             }
             context.SaveChanges();
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -19,21 +20,23 @@ namespace StravaLeaderboard.models
 
         //reference members
         public Season Season { get; set; }
-        public ICollection<EventSegment> EventSegments { get; set; }
+        public ICollection<DayEventSegment> DayEventSegments { get; set; }
         public List<Activity> Activities { get; set; }
     }
 
     //JOIN Table between Event and Segment
-    public class EventSegment
+    public class DayEventSegment
     {
-        public int EventSegmentID { get; set; }
+        public int DayEventSegmentID { get; set; }
 
         //foreign keys
         public int DayEventID { get; set; }
         public int SegmentID { get; set; }
 
         //reference members (apparently i don't need this)
-        //public DayEvent DayEvent { get; set; }
-        //public Segment Segment { get; set; }
+        [JsonIgnore]
+        public DayEvent DayEvent { get; set; }
+        [JsonIgnore]
+        public Segment Segment { get; set; }
     }
 }

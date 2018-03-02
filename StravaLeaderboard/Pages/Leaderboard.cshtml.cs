@@ -24,7 +24,7 @@ namespace StravaLeaderboard.Pages
             _apitokens = apitokens.Value;
         }
 
-        public List<EventSegment> EventSegments { get; set; }
+        public List<DayEventSegment> EventSegments { get; set; }
         public List<Segment> Segments { get; set; }
         public List<Activity> Activities { get; set; }
 
@@ -33,10 +33,10 @@ namespace StravaLeaderboard.Pages
         {
             //TODO: do something here if dayEventID is null or 0
             DayEventID = dayEventID;
-            EventSegments = await _db.EventSegments
+            EventSegments = await _db.DayEventSegments
                 .Where(s => s.DayEventID == DayEventID)
+                .Include(eventSegment => eventSegment.Segment)
                 .ToListAsync();
-
 
 
         }       

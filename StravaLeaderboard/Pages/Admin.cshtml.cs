@@ -42,7 +42,7 @@ namespace StravaLeaderboard.Pages
         public List<Club> ClubsSelection { get; set; }
         public List<Season> Seasons { get; set; }
         public List<DayEvent> DayEvents { get; set; }
-        public List<EventSegment> EventSegments { get; set; }
+        public List<DayEventSegment> DayEventSegments { get; set; }
         public List<Segment> Segments { get; set; }
 
         public async Task OnGetAsync(int? id)
@@ -50,7 +50,7 @@ namespace StravaLeaderboard.Pages
             ClubsSelection = await _db.Clubs.ToListAsync();
             Seasons = await _db.Seasons.ToListAsync();
             DayEvents = await _db.DayEvents.ToListAsync();
-            EventSegments = await _db.EventSegments.ToListAsync();
+            DayEventSegments = await _db.DayEventSegments.ToListAsync();
             Segments = await _db.Segments.ToListAsync();
         }
 
@@ -66,7 +66,7 @@ namespace StravaLeaderboard.Pages
                 return Page();
             }
 
-            EventSegments = await _db.EventSegments
+            DayEventSegments = await _db.DayEventSegments
                 .Where(i => i.DayEventID == DayEventID)
                 .AsNoTracking()
                 .ToListAsync();
@@ -76,14 +76,14 @@ namespace StravaLeaderboard.Pages
             //parse out activites with <Club.Keyword> in title
             JSONActivities = ParseActivities(JSONActivities);
 
-            for (int x = 0; x < EventSegments.Count; x++)
+            for (int x = 0; x < DayEventSegments.Count; x++)
             {
                 //get Segment Leaderboard for list of segments
-                RAWResults SegmentEntries = await GetSegmentEntries(EventSegments[x].SegmentID);
+                RAWResults SegmentEntries = await GetSegmentEntries(DayEventSegments[x].SegmentID);
                 //add efforts to Activity where usernames match between the segment and activity
                 List<JSONActivity> Activities = AddSegmentEntries(SegmentEntries, JSONActivities);
                 //save activities and athletes if new (to database)
-                SaveActivities(Activities, EventSegments[x].SegmentID);
+                SaveActivities(Activities, DayEventSegments[x].SegmentID);
             }
 
             //TODO: only go to /leaderboard if there are no errors

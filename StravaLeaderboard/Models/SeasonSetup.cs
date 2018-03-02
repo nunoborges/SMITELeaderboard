@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -40,7 +41,10 @@ namespace StravaLeaderboard.models
         public int SeasonID { get; set; }
         public int AthleteID { get; set; }
 
+        //reference members
+        [JsonIgnore]
         public Season Season { get; set; }
+        [JsonIgnore]
         public Athlete Athlete { get; set; }
     }
 }
