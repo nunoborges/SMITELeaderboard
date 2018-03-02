@@ -24,7 +24,7 @@ namespace StravaLeaderboard.Pages
             _apitokens = apitokens.Value;
         }
 
-        public List<DayEventSegment> EventSegments { get; set; }
+        public List<DayEventSegment> DayEventSegments { get; set; }
         public List<Segment> Segments { get; set; }
         public List<Activity> Activities { get; set; }
 
@@ -33,12 +33,27 @@ namespace StravaLeaderboard.Pages
         {
             //TODO: do something here if dayEventID is null or 0
             DayEventID = dayEventID;
-            EventSegments = await _db.DayEventSegments
-                .Where(s => s.DayEventID == DayEventID)
-                .Include(eventSegment => eventSegment.Segment)
+            DayEventSegments = await _db.DayEventSegments
+                .Where(e => e.DayEventID == DayEventID)
+                .Include(e => e.Segment)
                 .ToListAsync();
 
+            var qry = from dayEventSegment in DayEventSegments
+                       select dayEventSegment.Segment;
 
-        }       
+            Segments = qry.ToList();
+
+            //foreach (var course in al lCourses)
+            //{
+            //    AssignedCourseDataList.Add(new AssignedCourseData
+            //    {
+            //        CourseID = course.CourseID,
+            //        Title = course.Title,
+            //        Assigned = instructorCourses.Contains(course.CourseID)
+            //    });
+            //}
+
+
+        }
     }
 }
