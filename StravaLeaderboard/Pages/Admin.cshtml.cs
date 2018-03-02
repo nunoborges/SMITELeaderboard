@@ -87,7 +87,7 @@ namespace StravaLeaderboard.Pages
             }
 
             //TODO: only go to /leaderboard if there are no errors
-            return RedirectToPage("/Leaderboard");
+            return RedirectToPage("/Leaderboard",new { DayEventID = DayEventID });
         }
 
         public async Task<List<JSONActivity>> GetStravaActivities()
