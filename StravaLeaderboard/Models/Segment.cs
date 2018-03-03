@@ -21,5 +21,6 @@ namespace StravaLeaderboard.models
 
         //reference members
         public ICollection<DayEventSegment> DayEventSegments { get; set; }
+        public List<ActivityResult> ActivityResults { get; set; }
     }
 }

@@ -8,54 +8,57 @@
 <h2>@ViewData["Title"]</h2>
 
 @(Html.DevExtreme().DataGrid<Segment>()
-                            .ID("Segment-Master-Grid")
-                            .DataSource(Model.Segments)
-                            .ShowBorders(true)
-                            .ShowRowLines(true)
-                            .Sorting(s => s.Mode(GridSortingMode.Single))
-                            .Paging(p => p.PageSize(10))
-                            .Columns(col =>
-                            {
-                                col.AddFor(m => m.SegmentID)
-                                    .Width(150)
-                                    .Caption("ID");
-                                col.AddFor(m => m.Name)
-                                    .Caption("Name");
-                                col.AddFor(m => m.World)
-                                    .Width(150)
-                                    .Caption("World");
-                                col.AddFor(m => m.Type)
-                                    .Width(150)
-                                    .Caption("Type");
-                            })
-                            .MasterDetail(m => m
-                                .Enabled(true)
-                                .Template(@<text>
-                                <div class="master-detail-caption"><%= data.SegmentID %>  <%= data.Name %></div>
-                                @(Html.DevExtreme().DataGrid<Activity>()
-                                                    .ID("segment-leaderboard")
-                                                    .ShowBorders(true)
-                                                    .DataSource(Model.Activities)
-                                                    .Paging(p => p.PageSize(20))
-                                                    .Columns(col =>
-                                                    {
-                                                            col.AddFor(a => a.ActivityID)
-                                                                .Width(100)
-                                                                .Caption("Id");
-                                                            col.AddFor(a => a.Athlete.FirstName)
-                                                                .Caption("First Name");
-                                                            col.AddFor(a => a.Athlete.LastName)
-                                                                .Caption("Last Name");
-                                                            col.AddFor(a => a.ActivityResults[0].Elapsed_time)
-                                                                .Caption("Time (sec)");
-                                                            col.AddFor(a => a.Athlete.Sex)
-                                                                .Caption("Sex");
-                                                //col.AddFor(a => a.Athlete.TotalPoints)
-                                                //    .Caption("Points");
-                                                col.AddFor(a => a.ActivityResults[0].Rank)
-                                                                .Caption("Rank");
-                                                        })
-                                )
-                                </text>)
-                                                        )
+                .ID("Segment-Master-Grid")
+                .DataSource(Model.Segments)
+                .ShowBorders(true)
+                .ShowRowLines(true)
+                .Sorting(s => s.Mode(GridSortingMode.Single))
+                .Selection(s => s.Mode(SelectionMode.Single))
+                .Paging(p => p.PageSize(10))
+                .Columns(col =>
+                {
+                    col.AddFor(m => m.SegmentID)
+                        .Width(150)
+                        .Caption("ID");
+                    col.AddFor(m => m.Name)
+                        .Caption("Name");
+                    col.AddFor(m => m.World)
+                        .Width(150)
+                        .Caption("World");
+                    col.AddFor(m => m.Type)
+                        .Width(150)
+                        .Caption("Type");
+                })
+                .OnSelectionChanged(@<text>
+                function(data) {
+                var d = data.selectedRowsData[0];
+                var dataGrid = $("#segment-leaderboard").dxDataGrid("instance");
+                dataGrid.filter(["SegmentID", "=", d.SegmentID]);
+                }
+                </text>)
 )
+@(Html.DevExtreme().DataGrid<ActivityResult>()
+        .ID("segment-leaderboard")
+        .ShowBorders(true)
+        .DataSource(Model.ActivityResults)
+        .Paging(p => p.PageSize(50))
+        .Columns(col =>
+        {
+            col.AddFor(a => a.SegmentID)
+            .Width(100)
+            .Caption("SegmentID");
+                        col.AddFor(a => a.Activity.Athlete.FirstName)
+            .Caption("First Name");
+                        col.AddFor(a => a.Activity.Athlete.LastName)
+            .Caption("Last Name");
+                        col.AddFor(a => a.Elapsed_time)
+            .Caption("Time (sec)");
+                        col.AddFor(a => a.Activity.Athlete.Sex)
+            .Caption("Sex");
+                        col.AddFor(a => a.Points)
+            .Caption("Points");
+                        col.AddFor(a => a.Rank)
+            .Caption("Rank");
+            })
+)
+                                                                                                                                                                                                                                                                                 

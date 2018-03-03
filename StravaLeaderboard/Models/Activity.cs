@@ -53,17 +53,18 @@ namespace StravaLeaderboard.models
         public Segment Segment { get; set; }
     }
 
-    public class AthleteEventResult
-    {
-        public int AthleteEventResultID { get; set; }
-        public int Green_points { get; set; }
-        public int Polka_points { get; set; }
+    //TODO: deprecate this model entity
+    //public class AthleteEventResult
+    //{
+    //    public int AthleteEventResultID { get; set; }
+    //    public int Green_points { get; set; }
+    //    public int Polka_points { get; set; }
 
-        //foreign key
-        public int ActivityID { get; set; }
+    //    //foreign key
+    //    public int ActivityID { get; set; }
 
-        //reference members
-        [JsonIgnore]
-        public Activity Activity { get; set; }
-    }
+    //    //reference members
+    //    [JsonIgnore]
+    //    public Activity Activity { get; set; }
+    //}
 }

@@ -167,19 +167,23 @@ namespace StravaLeaderboard.Pages
 
         private void AddSegmentResults(JSONActivity jsonActivity, int segmentID)
         {
-            ActivityResult activityResult = new ActivityResult
-            {
-                Rank = jsonActivity.Athlete.SegmentResults.Rank,
-                Elapsed_time = jsonActivity.Athlete.SegmentResults.Elapsed_time,
-                Start_date = jsonActivity.Athlete.SegmentResults.Start_date,
-                Strava_rank = jsonActivity.Athlete.SegmentResults.Strava_rank,
-                Points = jsonActivity.Athlete.SegmentResults.Points,
-                ActivityID = jsonActivity.Id,
-                SegmentID = segmentID
-            };
-            _db.ActivityResults.Add(activityResult);
+            //TODO: don't add if segment results are already there
+            //if (!(_db.ActivityResults.Any(o => o.Start_date == jsonActivity.Athlete.SegmentResults.Start_date)))
+            //{
+                ActivityResult activityResult = new ActivityResult
+                {
+                    Rank = jsonActivity.Athlete.SegmentResults.Rank,
+                    Elapsed_time = jsonActivity.Athlete.SegmentResults.Elapsed_time,
+                    Start_date = jsonActivity.Athlete.SegmentResults.Start_date,
+                    Strava_rank = jsonActivity.Athlete.SegmentResults.Strava_rank,
+                    Points = jsonActivity.Athlete.SegmentResults.Points,
+                    ActivityID = jsonActivity.Id,
+                    SegmentID = segmentID
+                };
+                _db.ActivityResults.Add(activityResult);
 
-            _db.SaveChanges();
+                _db.SaveChanges();
+            //}
         }
 
         private void CreateNewActivity(JSONActivity jsonActivity)
@@ -243,7 +247,7 @@ namespace StravaLeaderboard.Pages
                 stravaClubID,
                 200,
                 0,
-                "this_year",
+                "today",
                 _apitokens.Access_Token
                 );
             string json = await Strava.Http.WebRequest.SendGetAsync(new Uri(getUrl));
