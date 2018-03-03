@@ -193,7 +193,7 @@ namespace StravaLeaderboard.Pages
                 Comment_count = jsonActivity.Comment_count,
                 Kudos_count = jsonActivity.Kudos_count,
                 Flagged = jsonActivity.Flagged,
-                EventID = DayEventID,
+                DayEventID = DayEventID,
                 AthleteID = jsonActivity.Athlete.Id
             };
             _db.Activities.Add(activity);

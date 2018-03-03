@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace StravaLeaderboard.models
         public int Polka_points { get; set; } = 0;
 
         //foreign keys
-        public int EventID { get; set; }
+        public int DayEventID { get; set; }
         public int AthleteID { get; set; }
 
         //reference members
@@ -46,7 +47,9 @@ namespace StravaLeaderboard.models
         public int SegmentID { get; set; }
 
         //reference members
+        [JsonIgnore]
         public Activity Activity { get; set; }
+        [JsonIgnore]
         public Segment Segment { get; set; }
     }
 
@@ -60,6 +63,7 @@ namespace StravaLeaderboard.models
         public int ActivityID { get; set; }
 
         //reference members
+        [JsonIgnore]
         public Activity Activity { get; set; }
     }
 }

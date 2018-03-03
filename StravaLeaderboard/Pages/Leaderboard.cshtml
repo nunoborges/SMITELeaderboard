@@ -28,34 +28,34 @@
                                     .Width(150)
                                     .Caption("Type");
                             })
-                            @*.MasterDetail(m => m
+                            .MasterDetail(m => m
                                 .Enabled(true)
                                 .Template(@<text>
-                                <div class="master-detail-caption"><%= data.ID %>  <%= data.Name %></div>
-                                @(Html.DevExtreme().DataGrid<JSONActivity>()
+                                <div class="master-detail-caption"><%= data.SegmentID %>  <%= data.Name %></div>
+                                @(Html.DevExtreme().DataGrid<Activity>()
                                                     .ID("segment-leaderboard")
                                                     .ShowBorders(true)
-                                                    .DataSource(new JS("data.Activity"))
+                                                    .DataSource(Model.Activities)
                                                     .Paging(p => p.PageSize(20))
                                                     .Columns(col =>
                                                     {
-                                                            col.AddFor(a => a.Id)
+                                                            col.AddFor(a => a.ActivityID)
                                                                 .Width(100)
                                                                 .Caption("Id");
                                                             col.AddFor(a => a.Athlete.FirstName)
                                                                 .Caption("First Name");
                                                             col.AddFor(a => a.Athlete.LastName)
                                                                 .Caption("Last Name");
-                                                            col.AddFor(a => a.Athlete.SegmentResults[0].Elapsed_time)
+                                                            col.AddFor(a => a.ActivityResults[0].Elapsed_time)
                                                                 .Caption("Time (sec)");
                                                             col.AddFor(a => a.Athlete.Sex)
                                                                 .Caption("Sex");
                                                 //col.AddFor(a => a.Athlete.TotalPoints)
                                                 //    .Caption("Points");
-                                                col.AddFor(a => a.Athlete.SegmentResults[0].Rank)
+                                                col.AddFor(a => a.ActivityResults[0].Rank)
                                                                 .Caption("Rank");
                                                         })
                                 )
                                 </text>)
-                                                        )*@
+                                                        )
 )

@@ -43,17 +43,12 @@ namespace StravaLeaderboard.Pages
 
             Segments = qry.ToList();
 
-            //foreach (var course in al lCourses)
-            //{
-            //    AssignedCourseDataList.Add(new AssignedCourseData
-            //    {
-            //        CourseID = course.CourseID,
-            //        Title = course.Title,
-            //        Assigned = instructorCourses.Contains(course.CourseID)
-            //    });
-            //}
-
-
+            //TODO: collect the Activity (where segmentID = segments[].ID, and include Athlete and ActivityResult
+            Activities = await _db.Activities
+                .Where(e => e.DayEventID == dayEventID)
+                .Include(a => a.Athlete)
+                .Include(r => r.ActivityResults)
+                .ToListAsync();
         }
     }
 }
