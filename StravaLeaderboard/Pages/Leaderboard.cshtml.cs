@@ -45,16 +45,10 @@ namespace StravaLeaderboard.Pages
 
             Segments = qry.ToList();
 
-            //TODO: collect the Activity (where segmentID = segments[].ID, and include Athlete and ActivityResult
-            //Activities = await _db.Activities
-            //    .Where(e => e.DayEventID == dayEventID)
-            //    .Include(a => a.Athlete)
-            //    .Include(r => r.ActivityResults)
-            //    .ToListAsync();
-
             ActivityResults = await _db.ActivityResults
                 .Where(a => a.Activity.DayEventID == DayEventID)
-                .Include(a => a.Activity.Athlete)
+                .Include(a => a.Activity)
+                .ThenInclude(a => a.Athlete)
                 .OrderBy(a => a.Rank)
                 .AsNoTracking()
                 .ToListAsync();

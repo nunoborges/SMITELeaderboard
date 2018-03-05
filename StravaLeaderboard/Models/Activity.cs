@@ -28,6 +28,7 @@ namespace StravaLeaderboard.models
         //reference members
         public DayEvent Event { get; set; }
         public Athlete Athlete { get; set; }
+        [JsonIgnore]
         public List<ActivityResult> ActivityResults { get; set; }
     }
 
@@ -47,7 +48,6 @@ namespace StravaLeaderboard.models
         public int SegmentID { get; set; }
 
         //reference members
-        [JsonIgnore]
         public Activity Activity { get; set; }
         [JsonIgnore]
         public Segment Segment { get; set; }

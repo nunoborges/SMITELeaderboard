@@ -87,7 +87,7 @@ namespace StravaLeaderboard.Pages
             }
 
             //TODO: only go to /leaderboard if there are no errors
-            return RedirectToPage("/Leaderboard",new { DayEventID = DayEventID });
+            return RedirectToPage("/Leaderboard",new {  DayEventID });
         }
 
         public async Task<List<JSONActivity>> GetStravaActivities()
@@ -149,20 +149,6 @@ namespace StravaLeaderboard.Pages
                 }
                 _db.SaveChanges();
             }
-        
-            //var allCourses = context.Courses;
-            //var instructorCourses = new HashSet<int>(
-            //    instructor.CourseAssignments.Select(c => c.CourseID));
-            //AssignedCourseDataList = new List<AssignedCourseData>();
-            //foreach (var course in allCourses)
-            //{
-            //    AssignedCourseDataList.Add(new AssignedCourseData
-            //    {
-            //        CourseID = course.CourseID,
-            //        Title = course.Title,
-            //        Assigned = instructorCourses.Contains(course.CourseID)
-            //    });
-            //}
         }
 
         private void AddSegmentResults(JSONActivity jsonActivity, int segmentID)
@@ -268,9 +254,15 @@ namespace StravaLeaderboard.Pages
             {
                 foreach (JSONActivity activity in activities)
                 {
-                    //TODO: make the dates match as well - to make matching heuristic stronger
-                    if (segmentEntry.Athlete_name.ToLower().Equals(activity.Athlete.FirstName.ToLower() + " " + activity.Athlete.LastName.Substring(0, 1).ToLower() + "."))
+                    if ((segmentEntry.Athlete_name.ToLower().Equals(activity.Athlete.FirstName.ToLower() + 
+                        " " + activity.Athlete.LastName.Substring(0, 1).ToLower() + ".")) 
+                        && (activity.Start_date.Date == segmentEntry.Start_date.Date))
                     {
+                        //TODO: MAJOR BUG!! because of horrible need to 'name' match between activity and leaderboard
+                        // 2 scenarios exist that can create issues
+                        // 1. a bad pattern name match removes a previously ADDED segmentEntry within an activity
+                        // 2. a bad pattern name match adds a phantom entry when in fact the true rider didn't
+                        //       ride on that segment
                         activity.Athlete.SegmentResults = new JSONResults()
                         {
                             Rank = rankCounter,
